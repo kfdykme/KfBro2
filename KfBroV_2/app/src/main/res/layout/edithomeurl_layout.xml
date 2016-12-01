@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:id="@+id/edithomeurl_layoutLinearLayout"
+	android:layout_width="wrap_content"
+	android:layout_height="162dp"
+	android:orientation="vertical"
+	style="@style/historyColor_YELLOW"
+	android:gravity="center">
+
+	<TextView
+		android:layout_width="match_parent"
+		android:layout_height="40dp"
+		android:text="Your home's url:"
+		style="@style/historyColor_YELLOW"
+		android:textSize="30sp"
+		android:gravity="center_horizontal"
+		android:typeface="serif"/>
+
+	<EditText
+		android:id="@+id/edithomeurl_EditText"
+		android:layout_width="match_parent"
+		android:layout_height="40dp"
+		style="@style/historyColor_YELLOW"
+		android:hint="http://"
+		android:typeface="serif"
+		android:layout_margin="20dp"/>
+
+	<LinearLayout
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		style="@style/historyColor_YELLOW"
+		android:gravity="center_horizontal">
+
+		<Button
+			android:id="@+id/cancelEditHomeurl_Button"
+			style="?android:attr/buttonBarButtonStyle"
+			android:layout_height="42dp"
+			android:layout_width="wrap_content"
+			android:text="Cancel"
+			android:singleLine="true"
+			android:textSize="30sp"
+			android:textColor="#211E1E"
+			android:padding="1dp"/>
+
+		<Button
+			android:id="@+id/saveHomeurl_Button"
+			style="?android:attr/buttonBarButtonStyle"
+			android:layout_height="42dp"
+			android:layout_width="wrap_content"
+			android:text="Save"
+			android:singleLine="true"
+			android:layout_marginLeft="40dp"
+			android:textSize="30sp"
+			android:textColor="#2B2828"
+			android:padding="1dp"/>
+
+	</LinearLayout>
+
+</LinearLayout>
+

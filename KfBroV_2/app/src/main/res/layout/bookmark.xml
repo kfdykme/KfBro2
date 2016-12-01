@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:orientation="vertical"
+	style="@style/historyColor_YELLOW">
+
+	<LinearLayout
+		android:layout_height="wrap_content"
+		android:layout_width="match_parent"
+		android:orientation="horizontal"
+		android:gravity="center_horizontal"
+		style="@style/historyColor_YELLOW">
+
+		<Button
+			android:id="@+id/boo_back_button"
+			android:layout_height="wrap_content"
+			android:layout_width="wrap_content"
+			android:text="back"
+			style="@style/historyColor_YELLOW"/>
+
+		<Button
+			android:id="@+id/boo_clear_button"
+			android:layout_height="wrap_content"
+			android:layout_width="wrap_content"
+			android:text="clear"
+			style="@style/historyColor_YELLOW"/>
+
+	</LinearLayout>
+
+	<LinearLayout
+		android:layout_height="match_parent"
+		android:layout_width="match_parent"
+		android:orientation="vertical">
+
+		<LinearLayout
+			android:layout_height="match_parent"
+			android:layout_width="match_parent"
+			android:orientation="vertical"
+			android:gravity="center_horizontal"
+			style="@style/historyColor_YELLOW">
+
+			<TextView
+				android:layout_height="wrap_content"
+				android:textAppearance="?android:attr/textAppearanceLarge"
+				android:layout_width="wrap_content"
+				android:text="Bookmarks :"
+				style="@style/historyColor_YELLOW"
+				android:textSize="36sp"/>
+
+			<LinearLayout
+				android:layout_height="match_parent"
+				android:layout_width="match_parent"
+				android:orientation="vertical"
+				android:background="#E63C31">
+
+				<ScrollView
+					android:layout_height="match_parent"
+					android:layout_width="match_parent">
+
+					<LinearLayout
+						android:id="@+id/bookmarkLinearLayout"
+						android:layout_height="match_parent"
+						android:layout_width="match_parent"
+						android:orientation="vertical"/>
+
+				</ScrollView>
+
+			</LinearLayout>
+
+		</LinearLayout>
+
+	</LinearLayout>
+
+</LinearLayout>
+

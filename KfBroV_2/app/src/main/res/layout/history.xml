@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_height="match_parent"
+	android:layout_width="match_parent"
+	android:orientation="vertical"
+	android:layout_gravity="top"
+	style="@style/historyColor_YELLOW">
+
+	<LinearLayout
+		android:layout_height="wrap_content"
+		android:layout_width="match_parent"
+		android:orientation="horizontal"
+		android:gravity="center_horizontal"
+		style="@style/historyColor_YELLOW">
+
+		<Button
+			android:layout_height="wrap_content"
+			android:layout_width="wrap_content"
+			android:text="back"
+			android:id="@+id/goBackButton"
+			android:layout_margin="10dp"
+			style="@style/historyColor_YELLOW"
+			android:textStyle="normal"
+			android:textSize="25sp"/>
+
+		<Button
+			android:layout_height="wrap_content"
+			android:layout_width="wrap_content"
+			android:text="Clear"
+			android:id="@+id/clearButton"
+			android:layout_margin="10dp"
+			style="@style/historyColor_YELLOW"
+			android:textStyle="normal"
+			android:textSize="25sp"/>
+
+	</LinearLayout>
+
+	<TextView
+		android:layout_height="wrap_content"
+		android:textAppearance="?android:attr/textAppearanceMedium"
+		android:layout_width="wrap_content"
+		android:text="Historys :"
+		style="@style/historyColor_YELLOW"
+		android:layout_gravity="center_horizontal"
+		android:textSize="36sp"/>
+
+	<ScrollView
+		android:background="#EC7F72"
+		android:layout_height="match_parent"
+		android:layout_width="match_parent"
+		android:layout_marginTop="5dp">
+
+		<LinearLayout
+			android:layout_height="match_parent"
+			android:layout_width="match_parent"
+			android:orientation="vertical"
+			android:id="@+id/hisListLayout"/>
+
+	</ScrollView>
+
+</LinearLayout>
+

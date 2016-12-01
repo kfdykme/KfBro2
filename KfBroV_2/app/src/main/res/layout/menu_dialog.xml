@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_height="wrap_content"
+	android:layout_width="wrap_content">
+
+	<LinearLayout
+		android:layout_width="180dp"
+		android:layout_height="fill_parent"
+		android:orientation="vertical"
+		style="@style/menuDialogStyle_YELLOW">
+
+		<LinearLayout
+			android:layout_height="wrap_content"
+			android:layout_width="wrap_content"
+			android:orientation="horizontal"
+			style="@style/menuDialogStyle_YELLOW">
+
+			<Button
+				android:id="@+id/goBack_dialogButton"
+				android:layout_height="60dp"
+				android:text="←"
+				android:rotation="-6"
+				android:layout_margin="5dp"
+				android:layout_width="90dp"
+				style="@style/menuDialogButtonStyle_YELLOW"/>
+
+			<Button
+				android:id="@+id/goForward_dialogButton"
+				android:layout_height="60dp"
+				android:text="→"
+				android:rotation="6"
+				android:layout_margin="5dp"
+				android:layout_width="90dp"
+				android:translationX="-10dp"
+				style="@style/menuDialogButtonStyle_YELLOW"/>
+
+		</LinearLayout>
+
+		<Button
+			android:id="@+id/home_dialogButton"
+			android:layout_height="60dp"
+			android:layout_width="match_parent"
+			android:text="Home"
+			android:layout_margin="3dp"
+			android:singleLine="true"
+			android:translationX="-10dp"
+			android:translationZ="10dp"
+			style="@style/menuDialogButtonStyle_YELLOW"
+			android:textSize="29sp"
+			android:rotation="5"
+			android:rotationX="6"/>
+
+		<Button
+			android:id="@+id/toHistory_dialogButton"
+			android:layout_height="60dp"
+			android:layout_width="match_parent"
+			android:text="History"
+			android:layout_margin="3dp"
+			android:singleLine="true"
+			android:translationX="15dp"
+			style="@style/menuDialogButtonStyle_YELLOW"
+			android:rotationX="6"/>
+
+		<Button
+			android:id="@+id/addToBookmark_dialogButton"
+			android:layout_height="60dp"
+			android:layout_width="match_parent"
+			android:text="AddTobookMark"
+			android:layout_margin="3dp"
+			android:singleLine="true"
+			android:translationX="-10dp"
+			android:translationZ="10dp"
+			style="@style/menuDialogButtonStyle_YELLOW"
+			android:textSize="20sp"/>
+
+		<Button
+			android:id="@+id/toBookmark_dialogButton"
+			android:layout_height="60dp"
+			android:layout_width="match_parent"
+			android:text="Bookmark"
+			android:layout_margin="3dp"
+			android:singleLine="true"
+			style="@style/menuDialogButtonStyle_YELLOW"/>
+
+		<Button
+			android:id="@+id/toSetting_dialogButton"
+			android:layout_height="60dp"
+			android:layout_width="match_parent"
+			android:text="settings"
+			android:layout_margin="3dp"
+			android:singleLine="true"
+			android:textStyle="italic"
+			android:typeface="serif"
+			android:rotation="-16"
+			style="@style/menuDialogButtonStyle_YELLOW"/>
+
+		<Button
+			android:id="@+id/toExit_dialogButton"
+			android:layout_height="60dp"
+			android:layout_width="match_parent"
+			android:text="EXit"
+			android:layout_margin="3dp"
+			android:rotation="9"
+			style="@style/menuDialogButtonStyle_YELLOW"/>
+
+	</LinearLayout>
+
+</ScrollView>
+

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="AppTheme" parent="@android:style/Theme.Black.NoTitleBar.Fullscreen">
+	</style>
+	<style name="historyColor_YELLOW" >
+		<item name="android:textColor">#0f0f0f</item>
+		<item name="android:background">#F8E389</item>
+	</style>
+	<style name="background">
+		<item name="android:background">#8ccef1</item>
+	</style>
+	<style name="menuDialogStyle_YELLOW">
+		<item name="android:background">#F8E389</item>
+	</style>
+	<style name="menuDialogButtonStyle_YELLOW">
+		<item name="android:background">#F8E389</item>
+		<item name="android:textColor">#000000</item>
+		<item name="android:textSize">29sp</item>
+	</style>
+	<style name="menuButtonStyle_YELLOW">
+		<item name="android:background">#F8E389</item>
+		<item name="android:textColor">#000000</item>
+		<item name="android:textSize">30sp</item>
+	</style>
+	<style name="settingTextViewStyle">
+		<item name="android:layout_width">300dp</item>
+		<item name="android:layout_height">60dp</item>
+		<item name="android:padding">10dp</item>
+		<item name="android:textAppearance">?android:attr/textAppearanceMedium</item>
+	</style>
+	<style name="settingSwitchStyle">
+		<item name="android:layout_height">60dp</item>
+		<item name="android:layout_width">match_parent</item>
+		<item name="android:padding">10dp</item>
+		<item name="android:background">#4f4f4f</item>
+		<item name="android:textColor">#EAC566</item>
+		<item name="android:textAppearance">?android:attr/textAppearanceLarge</item>
+	</style>
+	<!--  android:textColor="#EAC566"
+	android:textAppearance="?android:attr/textAppearanceLarge"
+	android:typeface="sans"
+	android:gravity="right"
+	android:alpha="0.5"
+	android:switchPadding="111dp" -->
+	
+</resources>
