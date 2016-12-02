@@ -15,27 +15,33 @@
 			android:orientation="vertical">
 
 			<Switch
+				android:id="@+id/settingsJavaScriptEnabled_dialogSwitch"
 				android:text="JavaScriptEnabled"
 				style="@style/settingSwitchStyle"/>
 
 			<Switch
+				android:id="@+id/settingsJavaScriptCanOpenWindowsAutomatically_dialogSwitch"
 				android:text="JavaScriptCanOpenWindowsAutomatically"
 				style="@style/settingSwitchStyle"
 				android:layout_height="80dp"/>
 
 			<Switch
+				android:id="@+id/settingsAppCacheEnabled_dialogSwitch"
 				android:text="AppCacheEnabled"
 				style="@style/settingSwitchStyle"/>
 
 			<Switch
+				android:id="@+id/settingsBuiltInZoomControls_dialogSwitch"
 				android:text="BuiltInZoomControls"
 				style="@style/settingSwitchStyle"/>
 
 			<Switch
+				android:id="@+id/settingsSavePassword_dialogSwitch"
 				android:text="SavePassword"
 				style="@style/settingSwitchStyle"/>
 
 			<Switch
+				android:id="@+id/settingsSaveFormData_dialogSwitch"
 				android:text="SaveFormData"
 				style="@style/settingSwitchStyle"/>
 

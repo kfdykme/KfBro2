@@ -16,6 +16,10 @@ import android.util.*;
 import android.provider.*;
 import android.widget.RelativeLayout.*;
 import android.media.*;
+import android.net.*;
+import android.print.*;
+import com.kfdykme.utils.KfWebSettings;
+import android.widget.CompoundButton.*;
 
 public class MainActivity extends Activity 
 {
@@ -45,7 +49,7 @@ public class MainActivity extends Activity
 	public SQLiteDatabase booDatabase ;
 	public SQLiteDatabase lastLoadedDatabase;
 	public View menu_AlertDialog_View;
-	public View settings_AlertDialog_View;
+	
 	public View homeEdit_AlertDialog_View;
 	public WebView webview;
 	public Window menu_AlertDialog_Window;
@@ -102,23 +106,20 @@ public class MainActivity extends Activity
 	
 	public void creteHistory(String url){
 		
-		SQLiteDatabase hisDatabase =  openOrCreateDatabase("history.db",MODE_PRIVATE,null);
+		SQLiteDatabase hisDatabase =  openOrCreateDatabase(Constant.HISTORY_DATABASE_NAME,MODE_PRIVATE,null);
 		ContentValues cVal = new ContentValues();
-		hisDatabase.execSQL("create table if not exists histb(_id integer primary key autoincrement,webtitle text not null,weburl text not null,loadingtime text not null)");
-		
-		if(url != lastLoadedUrl){
-		cVal.put("webtitle",webview.getTitle().toString());
-		cVal.put("weburl",webview.getUrl().toString());
-		cVal.put("loadingtime",getTime());
-		hisDatabase.insert("histb",null,cVal);
-		lastLoadedUrl = webview.getUrl().toString();
-		Log.i("info","creat");
-		}
+		hisDatabase.execSQL("create table if not exists "+Constant.HISTORY_TABLE_NAME+"("+Constant.HISTORY_ID+" integer primary key autoincrement,"+Constant.HISTORY_WEB_TITLE+" text not null,"+Constant.HISTORY_WEB_URL+" text not null,"+Constant.HISTORY_WEB_LOADINGTIME+" text not null)");
 		
 		cVal.clear();
-
+		cVal.put(Constant.HISTORY_WEB_TITLE,webview.getTitle().toString());
+		cVal.put(Constant.HISTORY_WEB_URL,url);
+		cVal.put(Constant.HISTORY_WEB_LOADINGTIME,getTime());
+		hisDatabase.insert(Constant.HISTORY_TABLE_NAME,null,cVal);
+		lastLoadedUrl = webview.getUrl().toString();
+		
 		hisDatabase.close();
-
+		Log.i("info","creat");
+		
 		
 	}
 	
@@ -140,13 +141,14 @@ public class MainActivity extends Activity
 	}
 	
 	public void doVisitWebsite(String URL){
+		if(URL != null&&!URL.isEmpty()){
 		URL = URL.toLowerCase();
-		if(URL.contains("http://")){}else if(URL.contains("www.")){
+		if(URL.contains("http://")||URL.contains("https://")){}else if(URL.contains("www.")){
 			URL = "http://" + URL;
 		}else{
 			URL = "http://www."+URL;
 		}
-		webview.loadUrl(URL);
+		webview.loadUrl(URL);}
 	}
 	
 	public void findView(){
@@ -176,6 +178,10 @@ public class MainActivity extends Activity
 		toBookmark_Button = (Button)menu_AlertDialog_View.findViewById(R.id.toBookmark_dialogButton);
 		toExit_Button = (Button)menu_AlertDialog_View.findViewById(R.id.toExit_dialogButton);
 		toHistory_Button = (Button)menu_AlertDialog_View.findViewById(R.id.toHistory_dialogButton);
+		
+	}
+	
+	public void findViewInSettings(){
 		
 	}
 	
@@ -230,6 +236,77 @@ public class MainActivity extends Activity
 		
 	}
 	
+	
+	public class kfbroOnCheckListener implements OnCheckedChangeListener
+	{
+
+		@Override
+		public void onCheckedChanged(CompoundButton compoundButton, boolean bool)
+		{	switch(compoundButton.getId()){
+				case R.id.settingsAppCacheEnabled_dialogSwitch:
+					if(compoundButton.isChecked()){
+						KfWebSettings.SETTINGS_APPCACHEENABLED = false;
+					} else {
+						KfWebSettings.SETTINGS_APPCACHEENABLED = true;
+					}
+						webview.getSettings().setAppCacheEnabled(KfWebSettings.AppCacheEnabled_Switch.isChecked());
+					Toast.makeText(MainActivity.this,"changed successfully",Toast.LENGTH_SHORT).show();
+					break;
+				case R.id.settingsBuiltInZoomControls_dialogSwitch:
+					if(compoundButton.isChecked()){
+						KfWebSettings.SETTINGS_BUILDINZOOMCONTROLS = false;
+					} else {
+						KfWebSettings.SETTINGS_BUILDINZOOMCONTROLS= true;
+					}
+					webview.getSettings().setBuiltInZoomControls(KfWebSettings.SETTINGS_BUILDINZOOMCONTROLS);
+					Toast.makeText(MainActivity.this,"changed successfully",Toast.LENGTH_SHORT).show();
+					break;
+				case R.id.settingsJavaScriptEnabled_dialogSwitch:
+					if(compoundButton.isChecked()){
+						KfWebSettings.SETTINGS_JAVASCRIPTENABLED = false;
+					} else {
+						KfWebSettings.SETTINGS_JAVASCRIPTENABLED= true;
+					}
+					webview.getSettings().setJavaScriptEnabled(KfWebSettings.SETTINGS_JAVASCRIPTENABLED);
+					Toast.makeText(MainActivity.this,"changed successfully",Toast.LENGTH_SHORT).show();
+					break;
+				case R.id.settingsJavaScriptCanOpenWindowsAutomatically_dialogSwitch:
+					if(compoundButton.isChecked()){
+						KfWebSettings.SETTINGS_JAVASCRIPTCANOPENWINDOWSAUTOMATICALLY= false;
+					} else {
+						KfWebSettings.SETTINGS_JAVASCRIPTCANOPENWINDOWSAUTOMATICALLY= true;
+					}
+					webview.getSettings().setJavaScriptCanOpenWindowsAutomatically(KfWebSettings.SETTINGS_JAVASCRIPTCANOPENWINDOWSAUTOMATICALLY);
+					Toast.makeText(MainActivity.this,"changed successfully",Toast.LENGTH_SHORT).show();
+					break;
+				case R.id.settingsSaveFormData_dialogSwitch:
+					if(compoundButton.isChecked()){
+						KfWebSettings.SETTINGS_SAVAFORMDATA = false;
+					} else {
+						KfWebSettings.SETTINGS_SAVAPASSWORD= true;
+					}
+					webview.getSettings().setSaveFormData(KfWebSettings.SETTINGS_SAVAFORMDATA);
+					Toast.makeText(MainActivity.this,"changed successfully",Toast.LENGTH_SHORT).show();
+					break;
+				case R.id.settingsSavePassword_dialogSwitch:
+					if(compoundButton.isChecked()){
+						KfWebSettings.SETTINGS_SAVAPASSWORD = false;
+					} else {
+						KfWebSettings.SETTINGS_SAVAPASSWORD = true;
+					}
+					webview.getSettings().setSavePassword(KfWebSettings.SETTINGS_SAVAPASSWORD);
+					Toast.makeText(MainActivity.this,"changed successfully",Toast.LENGTH_SHORT).show();
+					break;
+					
+					
+					}
+			// TODO: Implement this method
+		}
+
+		
+		
+	}
+	
 	public class kfbroOnClickListener implements OnClickListener
 	{
 
@@ -242,14 +319,8 @@ public class MainActivity extends Activity
 					addToBM();
 					break;
 				case R.id.goBack_dialogButton:
-					if (webview.canGoBack()){
+					if (webview.canGoBack())
 						webview.goBack();
-					}else if (isFristGoBack){
-						isFristGoBack = false;
-						address_EditText.setText("again to leave");
-					} else {
-						finish();
-					}
 					break;
 				case R.id.goForward_dialogButton:
 					if(webview.canGoForward()){
@@ -269,7 +340,7 @@ public class MainActivity extends Activity
 					break;
 				case R.id.toExit_dialogButton:
 					menu_AlertDialog.dismiss();
-					System.exit(0);
+					finish();
 					break;
 				case R.id.toBookmark_dialogButton:
 					Intent inteb = new Intent(MainActivity.this,BookmarkActivity.class);
@@ -314,7 +385,6 @@ public class MainActivity extends Activity
 					break;
 				case R.id.L_Button:
 					homeUrl_EditText.setText(homeUrl);
-					
 					menu_AlertDialog.show();
 					break;
 			}
@@ -413,14 +483,13 @@ public class MainActivity extends Activity
 		}
 	
 	public void settingInitial(){
-		settings_AlertDialog_View = View.inflate(MainActivity.this,R.layout.settings_dialog,null);
+		KfWebSettings.settings_AlertDialog_View = View.inflate(MainActivity.this,R.layout.settings_dialog,null);
 		settings_AlertDialog = new Dialog(MainActivity.this,R.style.AppTheme);
 		settings_AlertDialog.setCanceledOnTouchOutside(true);
 		
-		
 		settings_AlertDialog_Window = settings_AlertDialog.getWindow();
 		settings_AlertDialog_Window.requestFeature(Window.FEATURE_NO_TITLE);
-		settings_AlertDialog.setContentView(settings_AlertDialog_View);
+		settings_AlertDialog.setContentView(KfWebSettings.settings_AlertDialog_View);
 		
 		settings_AlertDialog_Window_Params = settings_AlertDialog_Window.getAttributes();
 		settings_AlertDialog_Window.setGravity(Gravity.RIGHT);
@@ -429,6 +498,30 @@ public class MainActivity extends Activity
 		settings_AlertDialog_Window_Params.x = DensittUtil.dp2px(30,MainActivity.this);
 		settings_AlertDialog_Window_Params.y = DensittUtil.dp2px(30,MainActivity.this);
 		settings_AlertDialog_Window.setAttributes(settings_AlertDialog_Window_Params);
+		KfWebSettings.JavaScriptEnabled_Switch = (Switch) KfWebSettings.settings_AlertDialog_View.findViewById(R.id.settingsJavaScriptEnabled_dialogSwitch);
+		KfWebSettings.JavaScriptCanOpenWindowsAutomatically_Switch = (Switch) KfWebSettings.settings_AlertDialog_View.findViewById(R.id.settingsJavaScriptCanOpenWindowsAutomatically_dialogSwitch);
+		KfWebSettings.AppCacheEnabled_Switch = (Switch) KfWebSettings.settings_AlertDialog_View.findViewById(R.id.settingsAppCacheEnabled_dialogSwitch);
+		KfWebSettings.BuildInZoomControls_Switch = (Switch) KfWebSettings.settings_AlertDialog_View.findViewById(R.id.settingsBuiltInZoomControls_dialogSwitch);
+		KfWebSettings.SavaFormData_Switch = (Switch) KfWebSettings.settings_AlertDialog_View.findViewById(R.id.settingsSaveFormData_dialogSwitch);
+		KfWebSettings.SavaPassword_Switch= (Switch) KfWebSettings.settings_AlertDialog_View.findViewById(R.id.settingsSavePassword_dialogSwitch);
+		
+		KfWebSettings.JavaScriptEnabled_Switch.setChecked(KfWebSettings.SETTINGS_JAVASCRIPTENABLED);
+		KfWebSettings.JavaScriptCanOpenWindowsAutomatically_Switch.setChecked(KfWebSettings.SETTINGS_JAVASCRIPTCANOPENWINDOWSAUTOMATICALLY);
+		KfWebSettings.AppCacheEnabled_Switch.setChecked(KfWebSettings.SETTINGS_APPCACHEENABLED);
+		KfWebSettings.BuildInZoomControls_Switch.setChecked(KfWebSettings.SETTINGS_BUILDINZOOMCONTROLS);
+		KfWebSettings.SavaFormData_Switch.setChecked(KfWebSettings.SETTINGS_SAVAFORMDATA);
+		KfWebSettings.SavaPassword_Switch.setChecked(KfWebSettings.SETTINGS_SAVAPASSWORD);
+		
+		KfWebSettings.JavaScriptEnabled_Switch.setOnCheckedChangeListener(new kfbroOnCheckListener());
+		KfWebSettings.JavaScriptCanOpenWindowsAutomatically_Switch.setOnCheckedChangeListener(new kfbroOnCheckListener());
+		KfWebSettings.AppCacheEnabled_Switch.setOnCheckedChangeListener(new kfbroOnCheckListener());
+		KfWebSettings.BuildInZoomControls_Switch.setOnCheckedChangeListener(new kfbroOnCheckListener());
+		KfWebSettings.SavaFormData_Switch.setOnCheckedChangeListener(new kfbroOnCheckListener());
+		KfWebSettings.SavaPassword_Switch.setOnCheckedChangeListener(new kfbroOnCheckListener());
+		
+		
+		
+		
 	}
 
 
@@ -436,15 +529,9 @@ public class MainActivity extends Activity
 	protected void onActivityResult(int requestCode, int resultCode, Intent data)
 	{
 		if(requestCode == 1&&resultCode == RESULT_OK){
-
-			webview.loadUrl(data.getStringExtra("URL"));
-
-			address_EditText.setText(data.getStringExtra("URL"));
+			doVisitWebsite(data.getStringExtra("URL"));
 		}else if (requestCode == 2 && resultCode == RESULT_OK){
-
-			webview.loadUrl(data.getStringExtra("URL"));
-
-			address_EditText.setText(data.getStringExtra("URL"));
+			doVisitWebsite(data.getStringExtra("URL"));
 		}
 
 		// TODO: Implement this method
@@ -577,14 +664,14 @@ public class MainActivity extends Activity
 	public void webInistial(){
 		WebSettings WS = webview.getSettings();
 		
-		WS.setJavaScriptEnabled(true);
-		WS.setJavaScriptCanOpenWindowsAutomatically(true);
-		WS.setAppCacheEnabled(true);
+		WS.setJavaScriptEnabled(KfWebSettings.SETTINGS_JAVASCRIPTENABLED);
+		WS.setJavaScriptCanOpenWindowsAutomatically(KfWebSettings.SETTINGS_JAVASCRIPTCANOPENWINDOWSAUTOMATICALLY);
+		WS.setAppCacheEnabled(KfWebSettings.SETTINGS_APPCACHEENABLED);
 		WS.setAppCacheMaxSize(20480);
 		WS.setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
-		WS.setBuiltInZoomControls(true);
-		WS.setSavePassword(true);
-		WS.setSaveFormData(true);
+		WS.setBuiltInZoomControls(KfWebSettings.SETTINGS_BUILDINZOOMCONTROLS);
+		WS.setSavePassword(KfWebSettings.SETTINGS_SAVAFORMDATA);
+		WS.setSaveFormData(KfWebSettings.SETTINGS_SAVAPASSWORD);
 		
 		webview.setWebChromeClient(webChrome);
 		webview.setWebViewClient(webViewClient);
@@ -592,10 +679,10 @@ public class MainActivity extends Activity
 		loadHomeUrl();
 		if (lastLoadedUrl == Constant.LAST_LOADED_URL_NULL){
 			Log.i("info","llurl == null");
-			webview.loadUrl(homeUrl);
+			doVisitWebsite(homeUrl);
 		} else {
 			Log.i("info","llurl != null");
-			webview.loadUrl(lastLoadedUrl);
+			doVisitWebsite(lastLoadedUrl);
 			}
 		//webview.loadUrl(lastLoadedUrl);
 		
@@ -607,8 +694,11 @@ public class MainActivity extends Activity
 		public void onProgressChanged(WebView view, int newProgress)
 		{
 			if(newProgress == 100){
-				creteHistory(address_EditText.getText().toString());
+				closeAddressEdit();
+				creteHistory(webview.getUrl().toString());
 				
+			} else if (newProgress == 0){
+				address_EditText.setText(webview.getUrl());
 			}	
 			
 			// TODO: Implement this method
@@ -619,27 +709,27 @@ public class MainActivity extends Activity
 	public WebViewClient webViewClient = new WebViewClient(){
 		@Override
 		public boolean shouldOverrideUrlLoading(WebView view,String url){
-			view.loadUrl(url);
+			doVisitWebsite(url);
 			return true;
-		}
-
-		@Override
-		public void onPageStarted(WebView view, String url, Bitmap favicon)
-		{
-			address_EditText.setText(url);
-			// TODO: Implement this method
-			super.onPageStarted(view, url, favicon);
 		}
 
 		@Override
 		public void onPageFinished(WebView view, String url)
 		{
-			closeAddressEdit();
 			
 			// TODO: Implement this method
 			super.onPageFinished(view, url);
-		}		
+		}
+
+		@Override
+		public void onPageStarted(WebView view, String url, Bitmap favicon)
+		{
+			// TODO: Implement this method
+			super.onPageStarted(view, url, favicon);
+		}
 		
+		
+	
 	};
 	
 	}

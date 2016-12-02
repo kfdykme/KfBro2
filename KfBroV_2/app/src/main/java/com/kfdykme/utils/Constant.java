@@ -13,6 +13,7 @@ public class Constant
 	final public static String HISTORY_WEB_TITLE = "title";
 	final public static String HISTORY_ID = "_id";
 	final public static String HISTORY_WEB_URL = "url";
+	final public static String HISTORY_WEB_LOADINGTIME = "loadingtime";
 	final public static String BOOKMARK_DATABASE_NAME = "boo.db";
 	final public static String BOOKMARK_TABLE_NAME = "bookmark";
 	final public static String BOOKMARK_WEB_TITLE = "title";
@@ -29,4 +30,13 @@ public class Constant
 	final public static String LAST_LOADED_URL = "url";
 	final public static String LAST_LOADED_URL_NULL = "null";
 	final public static String FIRST_HOME_URL = "http://www.baidu.com";
+	final public static String WEBSETTINGS_DATABASE_NAME = "websettings";
+	final public static String WEBSETTINGS_TABLE_NAME = "websettingstable";
+	final public static String WEBSETTINGS_TYPE = "websettingstable";
+	final public static String WEBSETTINGS_VALUE = "websettingstable";
+	final public static String WEBSETTINGS_TRUE = "true";
+	final public static String WEBSETTINGS_FALSE = "false";
+	
+	
+	
 	}

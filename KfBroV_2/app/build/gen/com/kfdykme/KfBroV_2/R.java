@@ -33,6 +33,12 @@ public final class R {
         public static final int hisListLayout=0x7f060009;
         public static final int home_dialogButton=0x7f060010;
         public static final int saveHomeurl_Button=0x7f060006;
+        public static final int settingsAppCacheEnabled_dialogSwitch=0x7f060018;
+        public static final int settingsBuiltInZoomControls_dialogSwitch=0x7f060019;
+        public static final int settingsJavaScriptCanOpenWindowsAutomatically_dialogSwitch=0x7f060017;
+        public static final int settingsJavaScriptEnabled_dialogSwitch=0x7f060016;
+        public static final int settingsSaveFormData_dialogSwitch=0x7f06001b;
+        public static final int settingsSavePassword_dialogSwitch=0x7f06001a;
         public static final int toBookmark_dialogButton=0x7f060013;
         public static final int toExit_dialogButton=0x7f060015;
         public static final int toHistory_dialogButton=0x7f060011;
