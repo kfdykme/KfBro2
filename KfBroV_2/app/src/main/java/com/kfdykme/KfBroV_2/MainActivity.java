@@ -112,14 +112,17 @@ public class MainActivity extends Activity
 		hisDatabase.execSQL("create table if not exists "+Constant.HISTORY_TABLE_NAME+"("+Constant.HISTORY_ID+" integer primary key autoincrement,"+Constant.HISTORY_WEB_TITLE+" text not null,"+Constant.HISTORY_WEB_URL+" text not null,"+Constant.HISTORY_WEB_LOADINGTIME+" text not null)");
 		
 		cVal.clear();
-		cVal.put(Constant.HISTORY_WEB_TITLE,webview.getTitle().toString());
 		cVal.put(Constant.HISTORY_WEB_URL,url);
 		cVal.put(Constant.HISTORY_WEB_LOADINGTIME,getTime());
+		cVal.put(Constant.HISTORY_WEB_TITLE,webview.getTitle().toString());
 		hisDatabase.insert(Constant.HISTORY_TABLE_NAME,null,cVal);
 		lastLoadedUrl = webview.getUrl().toString();
 		
 		hisDatabase.close();
+		lastLoadedUrl = url;
 		Log.i("info","creat");
+		//Log.i("progress",String.valueOf(!webview.getUrl().toString().equals( lastLoadedUrl)));
+		//Log.i("progress","valueOf(lastLoadedUrl.contains(webview.getUrl().toString())) : "+String.valueOf(lastLoadedUrl.contains(webview.getUrl().toString())));
 		
 		
 	}
@@ -330,7 +333,7 @@ public class MainActivity extends Activity
 					}
 					break;
 				case R.id.home_dialogButton:
-					doVisitWebsite(homeUrl);
+					webview.loadUrl(homeUrl);
 					break;
 				case R.id.L_Button:
 					if (isOpenAddressEdit){
@@ -481,6 +484,7 @@ public class MainActivity extends Activity
 		//menu_AlertDialog_Window_Params.alpha = 0.69f;
 		menu_AlertDialog_Window_Params.x= 60;
 		menu_AlertDialog_Window_Params.y = 120;
+		menu_AlertDialog_Window_Params.setTitle("menu");
 		menu_AlertDialog_Window.setAttributes(menu_AlertDialog_Window_Params);
 		}
 	
@@ -695,12 +699,11 @@ public class MainActivity extends Activity
 		public void onProgressChanged(WebView view, int newProgress)
 		{
 			if(newProgress == 100){
-				closeAddressEdit();
-				creteHistory(webview.getUrl().toString());
-				web_progressbar.setVisibility(View.INVISIBLE);
-				l_Button.setText("L");
+				
+				//Log.i("progress","newProgress == 100");
 			} else if (newProgress == 0){
-				address_EditText.setText(webview.getUrl());
+				//address_EditText.setText(webview.getUrl());
+				Log.i("ptogress","newProgress == 0");
 			}	
 			
 			// TODO: Implement this method
@@ -715,12 +718,30 @@ public class MainActivity extends Activity
 			return true;
 		}
 
+		@Override
+		public void onPageFinished(WebView view, String url)
+		{
+			closeAddressEdit();
+		//	if (!webview.getUrl().toString().equals( lastLoadedUrl)){
+				creteHistory(webview.getUrl().toString());
+				//Log.i("progress",webview.getUrl().toString() +"end");
+				//Log.i("progress",lastLoadedUrl + "end");
+				//Log.i("progress","true");
+		//	}
+
+			web_progressbar.setVisibility(View.INVISIBLE);
+			l_Button.setText("L");
+			// TODO: Implement this method
+			super.onPageFinished(view, url);
+		}
+
+		
 	
 		@Override
 		public void onPageStarted(WebView view, String url, Bitmap favicon)
 		{
 			web_progressbar.setVisibility(View.VISIBLE);
-			l_Button.setText("≈");
+			l_Button.setText(" ");
 			// TODO: Implement this method
 			super.onPageStarted(view, url, favicon);
 		}
