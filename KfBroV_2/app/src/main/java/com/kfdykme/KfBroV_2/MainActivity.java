@@ -44,6 +44,7 @@ public class MainActivity extends Activity
 	public EditText homeUrl_EditText;
 	public EditText address_EditText;
 	public LinearLayout address_EditText_LinearLayout;
+	public ProgressBar web_progressbar;
 	public String lastLoadedUrl;
 	public String homeUrl;
 	public SQLiteDatabase booDatabase ;
@@ -156,6 +157,7 @@ public class MainActivity extends Activity
 		address_EditText_LinearLayout = (LinearLayout) findViewById(R.id.addressEditText_LinerLayout);
 		l_Button = (Button) findViewById(R.id.L_Button);
 		webview = (WebView) findViewById(R.id.webView);
+		web_progressbar = (ProgressBar) findViewById(R.id.mainProgressBar);
 		findViewInMenuLayout();
 		findViewInHomeUrlEditLayout();
 	}
@@ -696,7 +698,9 @@ public class MainActivity extends Activity
 			if(newProgress == 100){
 				closeAddressEdit();
 				creteHistory(webview.getUrl().toString());
-				
+				//web_progressbar.setVisiblity(View.INVISIBLE);
+				web_progressbar.setVisibility(View.INVISIBLE);
+				l_Button.setText("L");
 			} else if (newProgress == 0){
 				address_EditText.setText(webview.getUrl());
 			}	
@@ -724,6 +728,8 @@ public class MainActivity extends Activity
 		@Override
 		public void onPageStarted(WebView view, String url, Bitmap favicon)
 		{
+			web_progressbar.setVisibility(View.VISIBLE);
+			l_Button.setText(" ");
 			// TODO: Implement this method
 			super.onPageStarted(view, url, favicon);
 		}

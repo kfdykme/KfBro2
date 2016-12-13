@@ -16,10 +16,10 @@ public final class R {
         public static final int launchw=0x7f020002;
     }
     public static final class id {
-        public static final int L_Button=0x7f06000d;
-        public static final int addToBookmark_dialogButton=0x7f060012;
-        public static final int addressEditText=0x7f06000c;
-        public static final int addressEditText_LinerLayout=0x7f06000b;
+        public static final int L_Button=0x7f06000e;
+        public static final int addToBookmark_dialogButton=0x7f060014;
+        public static final int addressEditText=0x7f06000d;
+        public static final int addressEditText_LinerLayout=0x7f06000c;
         public static final int boo_back_button=0x7f060000;
         public static final int boo_clear_button=0x7f060001;
         public static final int bookmarkLinearLayout=0x7f060002;
@@ -28,21 +28,23 @@ public final class R {
         public static final int edithomeurl_EditText=0x7f060004;
         public static final int edithomeurl_layoutLinearLayout=0x7f060003;
         public static final int goBackButton=0x7f060007;
-        public static final int goBack_dialogButton=0x7f06000e;
-        public static final int goForward_dialogButton=0x7f06000f;
+        public static final int goBack_dialogButton=0x7f060010;
+        public static final int goForward_dialogButton=0x7f060011;
         public static final int hisListLayout=0x7f060009;
-        public static final int home_dialogButton=0x7f060010;
+        public static final int home_dialogButton=0x7f060012;
+        public static final int mainLinearLayout1=0x7f06000b;
+        public static final int mainProgressBar=0x7f06000f;
         public static final int saveHomeurl_Button=0x7f060006;
-        public static final int settingsAppCacheEnabled_dialogSwitch=0x7f060018;
-        public static final int settingsBuiltInZoomControls_dialogSwitch=0x7f060019;
-        public static final int settingsJavaScriptCanOpenWindowsAutomatically_dialogSwitch=0x7f060017;
-        public static final int settingsJavaScriptEnabled_dialogSwitch=0x7f060016;
-        public static final int settingsSaveFormData_dialogSwitch=0x7f06001b;
-        public static final int settingsSavePassword_dialogSwitch=0x7f06001a;
-        public static final int toBookmark_dialogButton=0x7f060013;
-        public static final int toExit_dialogButton=0x7f060015;
-        public static final int toHistory_dialogButton=0x7f060011;
-        public static final int toSetting_dialogButton=0x7f060014;
+        public static final int settingsAppCacheEnabled_dialogSwitch=0x7f06001a;
+        public static final int settingsBuiltInZoomControls_dialogSwitch=0x7f06001b;
+        public static final int settingsJavaScriptCanOpenWindowsAutomatically_dialogSwitch=0x7f060019;
+        public static final int settingsJavaScriptEnabled_dialogSwitch=0x7f060018;
+        public static final int settingsSaveFormData_dialogSwitch=0x7f06001d;
+        public static final int settingsSavePassword_dialogSwitch=0x7f06001c;
+        public static final int toBookmark_dialogButton=0x7f060015;
+        public static final int toExit_dialogButton=0x7f060017;
+        public static final int toHistory_dialogButton=0x7f060013;
+        public static final int toSetting_dialogButton=0x7f060016;
         public static final int webView=0x7f06000a;
     }
     public static final class layout {
