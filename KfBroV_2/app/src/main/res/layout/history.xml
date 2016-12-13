@@ -20,17 +20,17 @@
 			android:text="back"
 			android:id="@+id/goBackButton"
 			android:layout_margin="10dp"
-			style="@style/historyColor_YELLOW"
+			style="@style/historyColorButton_YELLOW"
 			android:textStyle="normal"
 			android:textSize="25sp"/>
 
 		<Button
 			android:layout_height="wrap_content"
-			android:layout_width="wrap_content"
+			android:layout_width="match_parent"
 			android:text="Clear"
 			android:id="@+id/clearButton"
 			android:layout_margin="10dp"
-			style="@style/historyColor_YELLOW"
+			style="@style/historyColorButton_YELLOW"
 			android:textStyle="normal"
 			android:textSize="25sp"/>
 
@@ -46,7 +46,7 @@
 		android:textSize="36sp"/>
 
 	<ScrollView
-		android:background="#EC7F72"
+		android:background="#4f4f4f"
 		android:layout_height="match_parent"
 		android:layout_width="match_parent"
 		android:layout_marginTop="5dp">

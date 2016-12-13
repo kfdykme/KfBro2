@@ -379,7 +379,7 @@ public class MainActivity extends Activity
 		{
 			switch(view.getId()){
 				case R.id.addressEditText:
-					address_EditText.setText("");
+					//address_EditText.setText("");
 					break;
 				case R.id.home_dialogButton:
 					menu_AlertDialog.dismiss();
@@ -478,7 +478,7 @@ public class MainActivity extends Activity
 		menu_AlertDialog_Window.setGravity(Gravity.RIGHT);
 		menu_AlertDialog_Window_Params.width = DensittUtil.dp2px(180,MainActivity.this);
 		menu_AlertDialog_Window_Params.height = DensittUtil.dp2px(420,MainActivity.this);
-		menu_AlertDialog_Window_Params.alpha = 0.69f;
+		//menu_AlertDialog_Window_Params.alpha = 0.69f;
 		menu_AlertDialog_Window_Params.x= 60;
 		menu_AlertDialog_Window_Params.y = 120;
 		menu_AlertDialog_Window.setAttributes(menu_AlertDialog_Window_Params);
@@ -674,7 +674,6 @@ public class MainActivity extends Activity
 		WS.setBuiltInZoomControls(KfWebSettings.SETTINGS_BUILDINZOOMCONTROLS);
 		WS.setSavePassword(KfWebSettings.SETTINGS_SAVAFORMDATA);
 		WS.setSaveFormData(KfWebSettings.SETTINGS_SAVAPASSWORD);
-		
 		webview.setWebChromeClient(webChrome);
 		webview.setWebViewClient(webViewClient);
 		loadLastUrl();
@@ -698,7 +697,6 @@ public class MainActivity extends Activity
 			if(newProgress == 100){
 				closeAddressEdit();
 				creteHistory(webview.getUrl().toString());
-				//web_progressbar.setVisiblity(View.INVISIBLE);
 				web_progressbar.setVisibility(View.INVISIBLE);
 				l_Button.setText("L");
 			} else if (newProgress == 0){
@@ -713,23 +711,16 @@ public class MainActivity extends Activity
 	public WebViewClient webViewClient = new WebViewClient(){
 		@Override
 		public boolean shouldOverrideUrlLoading(WebView view,String url){
-			doVisitWebsite(url);
+			webview.loadUrl(url);
 			return true;
 		}
 
-		@Override
-		public void onPageFinished(WebView view, String url)
-		{
-			
-			// TODO: Implement this method
-			super.onPageFinished(view, url);
-		}
-
+	
 		@Override
 		public void onPageStarted(WebView view, String url, Bitmap favicon)
 		{
 			web_progressbar.setVisibility(View.VISIBLE);
-			l_Button.setText(" ");
+			l_Button.setText("≈");
 			// TODO: Implement this method
 			super.onPageStarted(view, url, favicon);
 		}

@@ -100,7 +100,7 @@ public class BookmarkActivity extends Activity implements OnClickListener
 							TextView boo_title = new TextView(this);
 							boo_title.setText(booCur.getString(booCur.getColumnIndex(c)));
 							//
-							boo_title.setTextColor(Color.parseColor("#f0cabd"));
+							boo_title.setTextColor(Color.parseColor("#F8E389"));
 							boo_title.setTextSize(20);
 							boo_title.setLeft(10);
 							boo_title.setPadding(9,10,0,0);
@@ -117,8 +117,8 @@ public class BookmarkActivity extends Activity implements OnClickListener
 							boo_url.setText(booCur.getString(booCur.getColumnIndex(c)));
 							//
 							boo_url.setSingleLine(true);
-							boo_url.setTextColor(Color.parseColor("#f0cabd"));
-							boo_url.setShadowLayer(20,0,0,Color.parseColor("#f0f0f0"));
+							boo_url.setTextColor(Color.parseColor("#F8E389"));
+						
 							boo_url.setPadding(27,0,0,0);
 							//
 							boo_url.setOnClickListener(new OnClickListener(){

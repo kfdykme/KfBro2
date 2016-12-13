@@ -18,14 +18,16 @@
 			android:layout_height="wrap_content"
 			android:layout_width="wrap_content"
 			android:text="back"
-			style="@style/historyColor_YELLOW"/>
+			style="@style/historyColorButton_YELLOW"
+			android:layout_margin="10dp"/>
 
 		<Button
 			android:id="@+id/boo_clear_button"
 			android:layout_height="wrap_content"
-			android:layout_width="wrap_content"
+			android:layout_width="match_parent"
 			android:text="clear"
-			style="@style/historyColor_YELLOW"/>
+			style="@style/historyColorButton_YELLOW"
+			android:layout_margin="10dp"/>
 
 	</LinearLayout>
 
@@ -53,7 +55,7 @@
 				android:layout_height="match_parent"
 				android:layout_width="match_parent"
 				android:orientation="vertical"
-				android:background="#E63C31">
+				android:background="#4f4f4f">
 
 				<ScrollView
 					android:layout_height="match_parent"

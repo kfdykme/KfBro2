@@ -53,7 +53,7 @@ private void displayHis(){
 					case Constant.HISTORY_WEB_TITLE:
 							TextView his_title = new TextView(this);
 							his_title.setText(hisCur.getString(hisCur.getColumnIndex(cColumn)));
-							his_title.setTextColor(Color.parseColor("#f0cabd"));
+							his_title.setTextColor(Color.parseColor("#EAC566"));
 							his_title.setTextSize(20);
 							his_title.setLeft(10);
 							his_title.setPadding(9,10,0,0);
@@ -69,8 +69,8 @@ private void displayHis(){
 							TextView his_url = new TextView(this);
 							his_url.setText(hisCur.getString(hisCur.getColumnIndex(cColumn)));
 							his_url.setSingleLine(true);
-							his_url.setTextColor(Color.parseColor("#f0cabd"));
-							his_url.setShadowLayer(20,0,0,Color.parseColor("#f0f0f0"));
+							his_url.setTextColor(Color.parseColor("#EAC566"));
+							
 							his_url.setPadding(27,0,0,0);
 							his_url.setOnClickListener(new OnClickListener(){
 

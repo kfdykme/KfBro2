@@ -22,54 +22,61 @@
 			android:layout_gravity="right|center_vertical"
 			android:gravity="right|center_vertical">
 
-			<LinearLayout
+			<FrameLayout
 				android:layout_height="wrap_content"
 				android:layout_width="wrap_content"
-				android:orientation="horizontal"
-				android:background="#59E097"
-				android:id="@+id/mainLinearLayout1"
-				android:gravity="right">
+				android:layout_marginBottom="50dp">
 
 				<LinearLayout
-					android:id="@+id/addressEditText_LinerLayout"
-					android:layout_height="match_parent"
+					android:layout_height="wrap_content"
+					android:layout_width="wrap_content"
 					android:orientation="horizontal"
-					android:layout_width="0dp"
-					android:alpha="0.6">
+					android:background="#59E097"
+					android:id="@+id/mainLinearLayout1"
+					android:gravity="right">
 
-					<EditText
-						android:id="@+id/addressEditText"
+					<LinearLayout
+						android:id="@+id/addressEditText_LinerLayout"
 						android:layout_height="match_parent"
-						android:inputType="textPostalAddress"
-						android:layout_width="match_parent"
-						android:paddingLeft="4dp"
-						android:background="#B8E3D5"
-						android:hint="http://"
-						android:alpha="1"/>
+						android:orientation="horizontal"
+						android:layout_width="0dp"
+						android:alpha="0.6">
+
+						<EditText
+							android:id="@+id/addressEditText"
+							android:layout_height="match_parent"
+							android:inputType="textPostalAddress"
+							android:layout_width="match_parent"
+							android:paddingLeft="4dp"
+							android:background="#B8E3D5"
+							android:hint="http://"
+							android:alpha="1"/>
+
+					</LinearLayout>
+
+					<Button
+						android:id="@+id/L_Button"
+						android:layout_height="50dp"
+						android:layout_width="50dp"
+						android:text="L"
+						android:paddingBottom="7dp"
+						android:typeface="serif"
+						android:singleLine="true"
+						android:textColor="#6B7065"
+						style="@style/menuButtonStyle_YELLOW"/>
 
 				</LinearLayout>
 
-				<Button
-					android:id="@+id/L_Button"
+				<ProgressBar
+					android:id="@+id/mainProgressBar"
 					android:layout_height="50dp"
 					android:layout_width="50dp"
-					android:text="L"
-					android:paddingBottom="7dp"
-					android:typeface="serif"
-					android:singleLine="true"
-					android:textColor="#6B7065"
-					style="@style/menuButtonStyle_YELLOW"/>
+					android:layout_gravity="right|center_vertical"
+					android:visibility="visible"/>
 
-			</LinearLayout>
+			</FrameLayout>
 
 		</LinearLayout>
-
-		<ProgressBar
-			android:id="@+id/mainProgressBar"
-			android:layout_height="wrap_content"
-			android:layout_width="wrap_content"
-			android:layout_gravity="right|center_vertical"
-			android:visibility="invisible"/>
 
 	</FrameLayout>
 
