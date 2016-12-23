@@ -20,6 +20,7 @@ import android.net.*;
 import android.print.*;
 import com.kfdykme.utils.KfWebSettings;
 import android.widget.CompoundButton.*;
+import android.text.*;
 
 public class MainActivity extends Activity 
 {
@@ -34,6 +35,7 @@ public class MainActivity extends Activity
 	public Button toExit_Button;
 	public Button addToBookmark_Button;
 	public Button home_Button;
+	public Button newWebview_button;
 	public Button saveHomeUrl_Button;
 	public Button settings_Button;
 	public Button cancelEditHomeUrl_Button; 
@@ -49,6 +51,8 @@ public class MainActivity extends Activity
 	public String homeUrl;
 	public SQLiteDatabase booDatabase ;
 	public SQLiteDatabase lastLoadedDatabase;
+	public TextView address_TextView;
+	
 	public View menu_AlertDialog_View;
 	
 	public View homeEdit_AlertDialog_View;
@@ -102,6 +106,7 @@ public class MainActivity extends Activity
 		address_EditText_LinearLayout.setLayoutParams(closeEditParams);
 		isOpenAddressEdit = false;
 		address_EditText.setText(webview.getUrl().toString());
+		address_TextView.setText(webview.getTitle().toString());
 		isFristGoBack = true;
 	}
 	
@@ -158,6 +163,7 @@ public class MainActivity extends Activity
 	public void findView(){
 		address_EditText = (EditText) findViewById(R.id.addressEditText);
 		address_EditText_LinearLayout = (LinearLayout) findViewById(R.id.addressEditText_LinerLayout);
+		address_TextView = (TextView) findViewById(R.id.titleTextView);
 		l_Button = (Button) findViewById(R.id.L_Button);
 		webview = (WebView) findViewById(R.id.webView);
 		web_progressbar = (ProgressBar) findViewById(R.id.mainProgressBar);
@@ -179,6 +185,7 @@ public class MainActivity extends Activity
 		goBack_Button = (Button) menu_AlertDialog_View.findViewById(R.id.goBack_dialogButton);
 		goForward_Button = (Button)menu_AlertDialog_View.findViewById(R.id.goForward_dialogButton);
 		home_Button = (Button) menu_AlertDialog_View.findViewById(R.id.home_dialogButton);
+		newWebview_button = (Button)menu_AlertDialog_View.findViewById(R.id.newWebview_dialogButton);
 		settings_Button = (Button) menu_AlertDialog_View.findViewById(R.id.toSetting_dialogButton);
 		toBookmark_Button = (Button)menu_AlertDialog_View.findViewById(R.id.toBookmark_dialogButton);
 		toExit_Button = (Button)menu_AlertDialog_View.findViewById(R.id.toExit_dialogButton);
@@ -480,7 +487,7 @@ public class MainActivity extends Activity
 		menu_AlertDialog_Window_Params = menu_AlertDialog_Window.getAttributes();
 		menu_AlertDialog_Window.setGravity(Gravity.RIGHT);
 		menu_AlertDialog_Window_Params.width = DensittUtil.dp2px(180,MainActivity.this);
-		menu_AlertDialog_Window_Params.height = DensittUtil.dp2px(420,MainActivity.this);
+		menu_AlertDialog_Window_Params.height = DensittUtil.dp2px(300,MainActivity.this);
 		//menu_AlertDialog_Window_Params.alpha = 0.69f;
 		menu_AlertDialog_Window_Params.x= 60;
 		menu_AlertDialog_Window_Params.y = 120;
@@ -622,7 +629,7 @@ public class MainActivity extends Activity
 	public void openAddressEdit(){
 		LinearLayout.LayoutParams openEditParams = (LinearLayout.LayoutParams) address_EditText_LinearLayout.getLayoutParams();
 		openEditParams.width = Constant.ADDRESS_EDIT_OPEN;
-		address_EditText.setAlpha(1f);
+		//address_EditText.setAlpha(1f);
 		address_EditText_LinearLayout.setLayoutParams(openEditParams);
 		isOpenAddressEdit = true;
 		
@@ -665,6 +672,9 @@ public class MainActivity extends Activity
 		l_Button.setOnLongClickListener(new kfbroOnLongClickListener());
 		home_Button.setOnLongClickListener(new kfbroOnLongClickListener());
 		
+		
+		newWebview_button.setOnClickListener(new kfbroOnClickListener());
+		
 	}
 	
 	public void webInistial(){
@@ -698,6 +708,8 @@ public class MainActivity extends Activity
 		@Override
 		public void onProgressChanged(WebView view, int newProgress)
 		{
+			ProgressBar p= (ProgressBar)findViewById(R.id.mainProgressBar);
+			p.setProgress(newProgress);
 			if(newProgress == 100){
 				
 				//Log.i("progress","newProgress == 100");
@@ -712,26 +724,40 @@ public class MainActivity extends Activity
 	};
 	
 	public WebViewClient webViewClient = new WebViewClient(){
+
+			
 		@Override
-		public boolean shouldOverrideUrlLoading(WebView view,String url){
-			webview.loadUrl(url);
-			return true;
+		public boolean shouldOverrideUrlLoading(WebView view, String url) {
+			view.getSettings().setCacheMode(WebSettings.LOAD_DEFAULT); 
+			
+			WebView.HitTestResult hitTestResult = view.getHitTestResult();
+			//hitTestResult==null解决重定向问题
+
+			if (!TextUtils.isEmpty(url) && hitTestResult == null) {
+
+				view.loadUrl(url);
+
+				return true;
+
+			}
+			return super.shouldOverrideUrlLoading(view, url);
 		}
+
+	//最后在回退的时候：添加如下：
+	//if(view.canGoBack()){
+	//	view.getSettings().setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
+	//	mView.goBack();
+	//}
+		
 
 		@Override
 		public void onPageFinished(WebView view, String url)
 		{
 			closeAddressEdit();
-		//	if (!webview.getUrl().toString().equals( lastLoadedUrl)){
 				creteHistory(webview.getUrl().toString());
-				//Log.i("progress",webview.getUrl().toString() +"end");
-				//Log.i("progress",lastLoadedUrl + "end");
-				//Log.i("progress","true");
-		//	}
-
+	
 			web_progressbar.setVisibility(View.INVISIBLE);
 			l_Button.setText("L");
-			// TODO: Implement this method
 			super.onPageFinished(view, url);
 		}
 
@@ -742,7 +768,6 @@ public class MainActivity extends Activity
 		{
 			web_progressbar.setVisibility(View.VISIBLE);
 			l_Button.setText(" ");
-			// TODO: Implement this method
 			super.onPageStarted(view, url, favicon);
 		}
 		

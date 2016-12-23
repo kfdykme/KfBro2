@@ -15,6 +15,7 @@ import android.graphics.*;
 import com.kfdykme.utils.*;
 
 
+
 public class HistoryActivity extends Activity implements OnClickListener
 {
 	private Button bBTMian;
@@ -37,8 +38,7 @@ public void clearHistory(){
 private void displayHis(){
 	hisDatabase =  openOrCreateDatabase(Constant.HISTORY_DATABASE_NAME,MODE_PRIVATE,null);
 		hisDatabase.execSQL("create table if not exists "+Constant.HISTORY_TABLE_NAME+"("+Constant.HISTORY_ID+" integer primary key autoincrement,"+Constant.HISTORY_WEB_TITLE+" text not null,"+Constant.HISTORY_WEB_URL+" text not null,"+Constant.HISTORY_WEB_LOADINGTIME+" text not null)");
-		
-
+	
 	Cursor hisCur = hisDatabase.query(Constant.HISTORY_TABLE_NAME,null,Constant.HISTORY_ID+">?",new String[]{"0"},null,null,"_id DESC");
 
 		if (hisCur !=null){
@@ -46,8 +46,10 @@ private void displayHis(){
 
 			while(hisCur.moveToNext()){
 				for(String cColumn:cColumns){
+				
 					switch(cColumn){
 						case Constant.HISTORY_ID:
+							
 
 							break;
 					case Constant.HISTORY_WEB_TITLE:
@@ -72,8 +74,7 @@ private void displayHis(){
 							his_url.setTextColor(Color.parseColor("#EAC566"));
 							
 							his_url.setPadding(27,0,0,0);
-							his_url.setOnClickListener(new OnClickListener(){
-
+							his_url.setOnClickListener(new OnClickListener(){	
 
 								
 									@Override
@@ -83,7 +84,8 @@ private void displayHis(){
 										setResult(RESULT_OK,inte);
 										finish();
 									}
-								});
+								});		
+						
 							hisLayout.addView(his_url);
 						Log.i("info",hisCur.getString(hisCur.getColumnIndex(cColumn)));
 						

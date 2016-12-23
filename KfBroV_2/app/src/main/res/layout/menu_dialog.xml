@@ -64,6 +64,18 @@
 			android:rotationX="6"/>
 
 		<Button
+			android:id="@+id/newWebview_dialogButton"
+			android:layout_height="60dp"
+			android:layout_width="match_parent"
+			android:text="WebView"
+			android:layout_margin="-3dp"
+			android:singleLine="true"
+			android:translationX="15dp"
+			style="@style/menuDialogButtonStyle_YELLOW"
+			android:rotationX="-10"
+			android:rotationY="40"/>
+		
+		<Button
 			android:id="@+id/addToBookmark_dialogButton"
 			android:layout_height="60dp"
 			android:layout_width="match_parent"
@@ -85,6 +97,7 @@
 			style="@style/menuDialogButtonStyle_YELLOW"/>
 
 		<Button
+			android:visibility="gone"
 			android:id="@+id/toSetting_dialogButton"
 			android:layout_height="60dp"
 			android:layout_width="match_parent"

@@ -11,7 +11,6 @@
 		android:background="#F2867F">
 
 		<WebView
-			android:id="@+id/webView"
 			android:layout_height="match_parent"
 			android:layout_width="match_parent"
 			android:background="#E6756E"/>
@@ -35,44 +34,30 @@
 					android:gravity="right">
 
 					<LinearLayout
-						android:id="@+id/addressEditText_LinerLayout"
 						android:layout_height="match_parent"
 						android:orientation="vertical"
 						android:layout_width="0dp"
-						android:alpha="0.99"
-						android:layout_marginBottom="3dp">
-
-						<ProgressBar
-							android:id="@+id/mainProgressBar"
-							style="?android:attr/progressBarStyleHorizontal"
-							android:layout_height="3dp"
-							android:layout_width="match_parent"
-							android:background="#F8E389"/>
+						android:alpha="0.6">
 
 						<TextView
-							android:id="@+id/titleTextView"
-							android:layout_height="18dp"
+							android:layout_height="20dp"
 							android:textAppearance="?android:attr/textAppearanceMedium"
 							android:layout_width="match_parent"
 							android:text="Web Title"
-							style="@style/historyColorButton_YELLOW"
-							android:textSize="12sp"/>
+							style="@style/historyColorButton_YELLOW"/>
 
 						<EditText
-							android:id="@+id/addressEditText"
 							android:layout_height="match_parent"
 							android:inputType="textPostalAddress"
 							android:layout_width="match_parent"
 							android:paddingLeft="4dp"
 							android:background="#B8E3D5"
 							android:hint="http://"
-							android:alpha="1"
-							android:paddingTop="3dp"/>
+							android:alpha="1"/>
 
 					</LinearLayout>
 
 					<Button
-						android:id="@+id/L_Button"
 						android:layout_height="50dp"
 						android:layout_width="50dp"
 						android:text="L"
@@ -85,7 +70,6 @@
 				</LinearLayout>
 
 				<ProgressBar
-					android:id="@+id/mainProgressBar"
 					android:layout_height="50dp"
 					android:layout_width="50dp"
 					android:layout_gravity="right|center_vertical"

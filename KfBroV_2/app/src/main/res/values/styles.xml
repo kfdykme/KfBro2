@@ -20,6 +20,8 @@
 		<item name="android:background">#F8E389</item>
 		<item name="android:textColor">#4f4f4f</item>
 		<item name="android:textSize">29sp</item>
+		<item name="android:textAppearance">?android:attr/textAppearanceMedium</item>
+							
 	</style>
 	<style name="menuButtonStyle_YELLOW">
 		<item name="android:background">#F8E389</item>
