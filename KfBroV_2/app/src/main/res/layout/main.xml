@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
 	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:hyman="http://schemas.android.com/apk/res/com.kfdykme.KfBroV_2"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
 	android:gravity="center">
@@ -10,90 +11,153 @@
 		android:layout_width="match_parent"
 		android:background="#F2867F">
 
-		<WebView
-			android:id="@+id/webView"
+		<LinearLayout
+			android:id="@+id/mainWebLayout"
 			android:layout_height="match_parent"
 			android:layout_width="match_parent"
-			android:background="#E6756E"/>
+			android:background="#EDACA2"/>
 
 		<LinearLayout
-			android:layout_height="match_parent"
-			android:layout_width="wrap_content"
-			android:layout_gravity="right|center_vertical"
-			android:gravity="right|center_vertical">
+			android:id="@+id/addressEditText_LinerLayout"
+			android:layout_height="44dp"
+			android:orientation="vertical"
+			android:layout_width="match_parent"
+			android:alpha="0.99"
+			android:layout_marginBottom="53dp"
+			android:layout_marginTop="3dp"
+			android:layout_weight="1.0"
+			android:layout_gravity="center_vertical"
+			android:layout_marginRight="49dp"
+			android:layout_marginLeft="10dp">
 
-			<FrameLayout
-				android:layout_height="wrap_content"
-				android:layout_width="wrap_content"
-				android:layout_marginBottom="50dp">
+			<LinearLayout
+				android:layout_height="18dp"
+				android:layout_width="match_parent"
+				android:orientation="horizontal">
+
+				<TextView
+					android:id="@+id/titleTextView"
+					android:layout_height="match_parent"
+					android:textAppearance="?android:attr/textAppearanceMedium"
+					android:layout_weight="0.9"
+					android:layout_width="0dp"
+					android:text="Web Title"
+					android:singleLine="true"
+					style="@style/historyColorButton_YELLOW"
+					android:textSize="12sp"/>
+
+				<Button
+					android:id="@+id/delete_address_edittext_button"
+					style="@style/historyColorButton_YELLOW"
+					android:layout_height="match_parent"
+					android:text="X"
+					android:textSize="15dp"
+					android:layout_weight="0.1"
+					android:layout_width="0dp"
+					android:paddingBottom="3dp"/>
+
+			</LinearLayout>
+
+			<EditText
+				android:id="@+id/addressEditText"
+				android:layout_height="match_parent"
+				android:paddingTop="3dp"
+				android:background="#B8E3D5"
+				android:paddingLeft="4dp"
+				android:hint="http://"
+				android:layout_width="match_parent"
+				android:inputType="textPostalAddress"/>
+
+		</LinearLayout>
+
+		<RelativeLayout
+			android:id="@+id/mainLinearLayout"
+			android:layout_height="50dp"
+			android:layout_width="wrap_content"
+			android:orientation="vertical"
+			android:layout_marginBottom="50dp"
+			android:layout_gravity="right|center_vertical">
+
+			<ScrollView
+				android:id="@+id/menuScrollView"
+				android:layout_height="match_parent"
+				android:layout_width="50dp">
 
 				<LinearLayout
 					android:layout_height="wrap_content"
-					android:layout_width="wrap_content"
-					android:orientation="horizontal"
-					android:id="@+id/mainLinearLayout1"
-					android:gravity="right">
+					android:layout_width="match_parent"
+					android:orientation="vertical">
 
-					<LinearLayout
-						android:id="@+id/addressEditText_LinerLayout"
-						android:layout_height="match_parent"
-						android:orientation="vertical"
-						android:layout_width="0dp"
-						android:alpha="0.99"
-						android:layout_marginBottom="3dp">
+					<Button
+						android:id="@+id/addNewWebView_dialogButton"
+						android:text="+"
+						style="@style/menuButtonStyle_YELLOW"/>
 
-						<ProgressBar
-							android:id="@+id/mainProgressBar"
-							style="?android:attr/progressBarStyleHorizontal"
-							android:layout_height="3dp"
-							android:layout_width="match_parent"
-							android:background="#F8E389"/>
+					<Button
+						android:id="@+id/addToBookmark_dialogButton"
+						android:text="+B"
+						style="@style/menuButtonStyle_YELLOW"/>
+					
+					<Button
+						android:id="@+id/goForward_dialogButton"
+						android:text="《"
+						style="@style/menuButtonStyle_YELLOW"/>
 
-						<TextView
-							android:id="@+id/titleTextView"
-							android:layout_height="18dp"
-							android:textAppearance="?android:attr/textAppearanceMedium"
-							android:layout_width="match_parent"
-							android:text="Web Title"
-							style="@style/historyColorButton_YELLOW"
-							android:textSize="12sp"/>
-
-						<EditText
-							android:id="@+id/addressEditText"
-							android:layout_height="match_parent"
-							android:inputType="textPostalAddress"
-							android:layout_width="match_parent"
-							android:paddingLeft="4dp"
-							android:background="#B8E3D5"
-							android:hint="http://"
-							android:alpha="1"
-							android:paddingTop="3dp"/>
-
-					</LinearLayout>
+					<Button
+						android:id="@+id/goBack_dialogButton"
+						android:text="》"
+						style="@style/menuButtonStyle_YELLOW"/>
 
 					<Button
 						android:id="@+id/L_Button"
-						android:layout_height="50dp"
-						android:layout_width="50dp"
 						android:text="L"
-						android:paddingBottom="7dp"
-						android:typeface="serif"
-						android:singleLine="true"
-						android:textColor="#6B7065"
+						style="@style/menuButtonStyle_YELLOW"/>
+
+					<Button
+						android:id="@+id/Web_Button"
+						android:text="Web"
+						android:onClick="openWebWindowsChoose"
+						style="@style/menuButtonStyle_YELLOW"
+						android:textSize="22sp"/>
+
+					<Button
+						android:id="@+id/toHistory_dialogButton"
+						android:text="H"
+						style="@style/menuButtonStyle_YELLOW"/>
+
+					<Button
+						android:id="@+id/toBookmark_dialogButton"
+						android:text="B"
+						style="@style/menuButtonStyle_YELLOW"/>
+
+					<Button
+						android:id="@+id/home_dialogButton"
+						android:text="Ho"
+						style="@style/menuButtonStyle_YELLOW"/>
+
+					<Button
+						android:id="@+id/toExit_dialogButton"
+						android:text="E"
 						style="@style/menuButtonStyle_YELLOW"/>
 
 				</LinearLayout>
 
-				<ProgressBar
-					android:id="@+id/mainProgressBar"
-					android:layout_height="50dp"
-					android:layout_width="50dp"
-					android:layout_gravity="right|center_vertical"
-					android:visibility="visible"/>
+			</ScrollView>
 
-			</FrameLayout>
+		</RelativeLayout>
 
-		</LinearLayout>
+		<com.kfdykme.view.VerticalProgressbarWithProgress
+			android:id="@+id/address_ProgressBar"
+			android:layout_width="wrap_content"
+			android:layout_height="match_parent"/>
+
+		<Switch
+			android:id="@+id/newWebSwitch"
+			android:layout_height="25dp"
+			android:layout_width="25dp"
+			style="@style/settingSwitchStyle"
+			android:rotation="180"
+			android:layout_gravity="right"/>
 
 	</FrameLayout>
 

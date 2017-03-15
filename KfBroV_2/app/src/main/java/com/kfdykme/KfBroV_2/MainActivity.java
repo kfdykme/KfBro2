@@ -21,10 +21,15 @@ import android.print.*;
 import com.kfdykme.utils.KfWebSettings;
 import android.widget.CompoundButton.*;
 import android.text.*;
+import android.view.animation.*;
+import android.animation.*;
+import java.util.*;
+import android.view.WindowManager.*;
 
 public class MainActivity extends Activity 
 {
-	
+	private static final int NORMAL_HEIGHT = 50;
+	private static final int BORDER_HEIGHT = 400;
 	public Boolean isOpenAddressEdit;
 	public Boolean isFristGoBack;
 	public Button goBack_Button;
@@ -34,32 +39,49 @@ public class MainActivity extends Activity
 	public Button toBookmark_Button;
 	public Button toExit_Button;
 	public Button addToBookmark_Button;
+	public Button addNewWebView_Button;
 	public Button home_Button;
-	public Button newWebview_button;
 	public Button saveHomeUrl_Button;
-	public Button settings_Button;
 	public Button cancelEditHomeUrl_Button; 
+	public Button deleteAddressEditTExt_Button;
+	public Button Web_Button;
 	public ContentValues bookContentValue;
 	public Dialog homeEdit_AlertDialog;
 	public Dialog menu_AlertDialog;
 	public Dialog settings_AlertDialog;
 	public EditText homeUrl_EditText;
 	public EditText address_EditText;
+	
+	//webview's max number
+	private int webInt = 0;
+	//current displaying webview's id 
+	private int webId = 0;
+	
 	public LinearLayout address_EditText_LinearLayout;
-	public ProgressBar web_progressbar;
-	public String lastLoadedUrl;
+	public ScrollView menu_ScrollView;
+	
+	//last loaded website's url's string array 
+	public String[] lastLoadedUrl = new String [200];
+	
 	public String homeUrl;
 	public SQLiteDatabase booDatabase ;
 	public SQLiteDatabase lastLoadedDatabase;
 	public TextView address_TextView;
-	
+	public TextView[] webwindowsText;
 	public View menu_AlertDialog_View;
 	
 	public View homeEdit_AlertDialog_View;
-	public WebView webview;
+	
+	//current dispalying webview
+	public WebView current_webview;
+	
+	//all webviews are in this array
+	public WebView[] allWebView = new WebView[200];
+	
 	public Window menu_AlertDialog_Window;
 	public Window settings_AlertDialog_Window;
 	public Window homeEdit_AlertDialog_Window;
+	
 	public WindowManager.LayoutParams menu_AlertDialog_Window_Params ;
 	public WindowManager.LayoutParams settings_AlertDialog_Window_Params;
 	public WindowManager.LayoutParams homeEdit_AlertDialog_Window_Params;
@@ -70,16 +92,16 @@ public class MainActivity extends Activity
 		Cursor checkBM = booDatabase.query("bootb",null,"_id>?",new String[]{"0"},null,null,null);
 		ContentValues cVal = new ContentValues();
 		
-		cVal.put("webtitle",webview.getTitle());
+		cVal.put("webtitle",current_webview.getTitle());
 
-		cVal.put("weburl",webview.getUrl());
+		cVal.put("weburl",current_webview.getUrl());
 
 
 		if (checkBM != null){
 			String[] checkBM_columns = checkBM.getColumnNames();
 			while(checkBM.moveToNext()){
 				for (String c:checkBM_columns){
-					if (webview.getUrl().toString().contains(checkBM.getString(checkBM.getColumnIndex(c)))){
+					if (current_webview.getUrl().toString().contains(checkBM.getString(checkBM.getColumnIndex(c)))){
 						
 						Toast.makeText(getApplicationContext(),"It has been added to bookmark",Toast.LENGTH_SHORT).show();				
 						cVal.clear();
@@ -100,14 +122,15 @@ public class MainActivity extends Activity
 
 	
 	public void closeAddressEdit(){
-		LinearLayout.LayoutParams closeEditParams = (LinearLayout.LayoutParams) address_EditText_LinearLayout.getLayoutParams();
-		closeEditParams.width = Constant.ADDRESS_EDIT_CLOSE;
-		address_EditText.setAlpha(0f);
-		address_EditText_LinearLayout.setLayoutParams(closeEditParams);
+		
 		isOpenAddressEdit = false;
-		address_EditText.setText(webview.getUrl().toString());
-		address_TextView.setText(webview.getTitle().toString());
+		Animation loadAnimation = AnimationUtils.loadAnimation(MainActivity.this, R.anim.scale_to_small); 
+		address_EditText_LinearLayout.startAnimation(loadAnimation);
+		address_EditText_LinearLayout.setVisibility(View.INVISIBLE);
+		address_EditText.setText(current_webview.getUrl().toString());
+		address_TextView.setText(current_webview.getTitle().toString());
 		isFristGoBack = true;
+		
 	}
 	
 	public void creteHistory(String url){
@@ -119,27 +142,26 @@ public class MainActivity extends Activity
 		cVal.clear();
 		cVal.put(Constant.HISTORY_WEB_URL,url);
 		cVal.put(Constant.HISTORY_WEB_LOADINGTIME,getTime());
-		cVal.put(Constant.HISTORY_WEB_TITLE,webview.getTitle().toString());
+		cVal.put(Constant.HISTORY_WEB_TITLE,current_webview.getTitle().toString());
 		hisDatabase.insert(Constant.HISTORY_TABLE_NAME,null,cVal);
-		lastLoadedUrl = webview.getUrl().toString();
+		for (int i = 0 ; i < webInt;i++){}
+		lastLoadedUrl[i] = current_webview.getUrl().toString();
 		
 		hisDatabase.close();
 		lastLoadedUrl = url;
 		Log.i("info","creat");
-		//Log.i("progress",String.valueOf(!webview.getUrl().toString().equals( lastLoadedUrl)));
-		//Log.i("progress","valueOf(lastLoadedUrl.contains(webview.getUrl().toString())) : "+String.valueOf(lastLoadedUrl.contains(webview.getUrl().toString())));
 		
 		
 	}
 	
 	public void createLastLoadedUrl(){
 		lastLoadedDatabase = openOrCreateDatabase(Constant.LAST_LOADED_DATABASE_NAME,MODE_PRIVATE,null);
-		lastLoadedDatabase.execSQL("create table if not exists " + Constant.LAST_LOADED_TABLE_NAME+"("+Constant.LAST_LOADED_ID+" integer primary key autoincrement," + Constant.LAST_LOADED_URL +" text not null )");
+		lastLoadedDatabase.execSQL("create tabe if not exists " + Constant.LAST_LOADED_TABLE_NAME+"("+Constant.LAST_LOADED_ID+" integer primary key autoincrement," + Constant.LAST_LOADED_URL +" text not null )");
 		ContentValues lastLoadedContentValues = new ContentValues();
 		lastLoadedDatabase.delete(Constant.LAST_LOADED_TABLE_NAME,Constant.LAST_LOADED_ID +" > ?",new String[]{"0"});
-		if (webview.getUrl() != null){
-			lastLoadedContentValues.put(Constant.LAST_LOADED_URL,webview.getUrl().toString());
-			Log.i("lastLoaded",webview.getUrl().toString());
+		if (current_webview.getUrl() != null){
+			lastLoadedContentValues.put(Constant.LAST_LOADED_URL,current_webview.getUrl().toString());
+			Log.i("lastLoaded",current_webview.getUrl().toString());
 		} else {
 			lastLoadedContentValues.put(Constant.LAST_LOADED_URL,Constant.LAST_LOADED_URL_NULL);
 			Log.i("lastLoaded","null");
@@ -157,16 +179,23 @@ public class MainActivity extends Activity
 		}else{
 			URL = "http://www."+URL;
 		}
-		webview.loadUrl(URL);}
+		//Toast.makeText(MainActivity.this,current_webview.getClass().toString(),Toast.LENGTH_LONG).show();
+		current_webview.loadUrl(URL);
+		}
 	}
 	
 	public void findView(){
+		
 		address_EditText = (EditText) findViewById(R.id.addressEditText);
 		address_EditText_LinearLayout = (LinearLayout) findViewById(R.id.addressEditText_LinerLayout);
 		address_TextView = (TextView) findViewById(R.id.titleTextView);
 		l_Button = (Button) findViewById(R.id.L_Button);
-		webview = (WebView) findViewById(R.id.webView);
-		web_progressbar = (ProgressBar) findViewById(R.id.mainProgressBar);
+		deleteAddressEditTExt_Button = (Button) findViewById(R.id.delete_address_edittext_button);
+		Web_Button = (Button) findViewById(R.id.Web_Button);
+		
+		menu_ScrollView = (ScrollView) findViewById(R.id.menuScrollView);
+	
+		
 		findViewInMenuLayout();
 		findViewInHomeUrlEditLayout();
 	}
@@ -180,20 +209,16 @@ public class MainActivity extends Activity
 		
 	}
 	
-	public void findViewInMenuLayout(){
-		addToBookmark_Button = (Button)menu_AlertDialog_View.findViewById(R.id.addToBookmark_dialogButton);
-		goBack_Button = (Button) menu_AlertDialog_View.findViewById(R.id.goBack_dialogButton);
-		goForward_Button = (Button)menu_AlertDialog_View.findViewById(R.id.goForward_dialogButton);
-		home_Button = (Button) menu_AlertDialog_View.findViewById(R.id.home_dialogButton);
-		newWebview_button = (Button)menu_AlertDialog_View.findViewById(R.id.newWebview_dialogButton);
-		settings_Button = (Button) menu_AlertDialog_View.findViewById(R.id.toSetting_dialogButton);
-		toBookmark_Button = (Button)menu_AlertDialog_View.findViewById(R.id.toBookmark_dialogButton);
-		toExit_Button = (Button)menu_AlertDialog_View.findViewById(R.id.toExit_dialogButton);
-		toHistory_Button = (Button)menu_AlertDialog_View.findViewById(R.id.toHistory_dialogButton);
-		
-	}
 	
-	public void findViewInSettings(){
+	public void findViewInMenuLayout(){
+		addNewWebView_Button = (Button)findViewById(R.id.addNewWebView_dialogButton);
+		addToBookmark_Button = (Button)findViewById(R.id.addToBookmark_dialogButton);
+		goBack_Button = (Button) findViewById(R.id.goBack_dialogButton);
+		goForward_Button = (Button)findViewById(R.id.goForward_dialogButton);
+		home_Button = (Button) findViewById(R.id.home_dialogButton);
+		toBookmark_Button = (Button)findViewById(R.id.toBookmark_dialogButton);
+		toExit_Button = (Button)findViewById(R.id.toExit_dialogButton);
+		toHistory_Button = (Button)findViewById(R.id.toHistory_dialogButton);
 		
 	}
 	
@@ -232,7 +257,6 @@ public class MainActivity extends Activity
 		isOpenAddressEdit = false;
 		menuInitial();
 		homeEditDialogInistial();
-		settingInitial();
 		homeUrl = Constant.FIRST_HOME_URL;
 		
 		findView();
@@ -245,79 +269,41 @@ public class MainActivity extends Activity
 
 		booDatabase.execSQL("create table if not exists bootb(_id integer primary key autoincrement,webtitle text not null,weburl text not null)");
 		
-		
-	}
-	
-	
-	public class kfbroOnCheckListener implements OnCheckedChangeListener
-	{
-
-		@Override
-		public void onCheckedChanged(CompoundButton compoundButton, boolean bool)
-		{	switch(compoundButton.getId()){
-				case R.id.settingsAppCacheEnabled_dialogSwitch:
-					if(compoundButton.isChecked()){
-						KfWebSettings.SETTINGS_APPCACHEENABLED = false;
-					} else {
-						KfWebSettings.SETTINGS_APPCACHEENABLED = true;
-					}
-						webview.getSettings().setAppCacheEnabled(KfWebSettings.AppCacheEnabled_Switch.isChecked());
-					Toast.makeText(MainActivity.this,"changed successfully",Toast.LENGTH_SHORT).show();
-					break;
-				case R.id.settingsBuiltInZoomControls_dialogSwitch:
-					if(compoundButton.isChecked()){
-						KfWebSettings.SETTINGS_BUILDINZOOMCONTROLS = false;
-					} else {
-						KfWebSettings.SETTINGS_BUILDINZOOMCONTROLS= true;
-					}
-					webview.getSettings().setBuiltInZoomControls(KfWebSettings.SETTINGS_BUILDINZOOMCONTROLS);
-					Toast.makeText(MainActivity.this,"changed successfully",Toast.LENGTH_SHORT).show();
-					break;
-				case R.id.settingsJavaScriptEnabled_dialogSwitch:
-					if(compoundButton.isChecked()){
-						KfWebSettings.SETTINGS_JAVASCRIPTENABLED = false;
-					} else {
-						KfWebSettings.SETTINGS_JAVASCRIPTENABLED= true;
-					}
-					webview.getSettings().setJavaScriptEnabled(KfWebSettings.SETTINGS_JAVASCRIPTENABLED);
-					Toast.makeText(MainActivity.this,"changed successfully",Toast.LENGTH_SHORT).show();
-					break;
-				case R.id.settingsJavaScriptCanOpenWindowsAutomatically_dialogSwitch:
-					if(compoundButton.isChecked()){
-						KfWebSettings.SETTINGS_JAVASCRIPTCANOPENWINDOWSAUTOMATICALLY= false;
-					} else {
-						KfWebSettings.SETTINGS_JAVASCRIPTCANOPENWINDOWSAUTOMATICALLY= true;
-					}
-					webview.getSettings().setJavaScriptCanOpenWindowsAutomatically(KfWebSettings.SETTINGS_JAVASCRIPTCANOPENWINDOWSAUTOMATICALLY);
-					Toast.makeText(MainActivity.this,"changed successfully",Toast.LENGTH_SHORT).show();
-					break;
-				case R.id.settingsSaveFormData_dialogSwitch:
-					if(compoundButton.isChecked()){
-						KfWebSettings.SETTINGS_SAVAFORMDATA = false;
-					} else {
-						KfWebSettings.SETTINGS_SAVAPASSWORD= true;
-					}
-					webview.getSettings().setSaveFormData(KfWebSettings.SETTINGS_SAVAFORMDATA);
-					Toast.makeText(MainActivity.this,"changed successfully",Toast.LENGTH_SHORT).show();
-					break;
-				case R.id.settingsSavePassword_dialogSwitch:
-					if(compoundButton.isChecked()){
-						KfWebSettings.SETTINGS_SAVAPASSWORD = false;
-					} else {
-						KfWebSettings.SETTINGS_SAVAPASSWORD = true;
-					}
-					webview.getSettings().setSavePassword(KfWebSettings.SETTINGS_SAVAPASSWORD);
-					Toast.makeText(MainActivity.this,"changed successfully",Toast.LENGTH_SHORT).show();
-					break;
-					
-					
-					}
-			// TODO: Implement this method
+		loadLastUrl();
+		loadHomeUrl();
+		if (lastLoadedUrl == Constant.LAST_LOADED_URL_NULL){
+			Log.i("llurl","llurl == null");
+			doVisitWebsite(homeUrl);
+		} else {
+			Log.i("llurl","llurl != null");
+			doVisitWebsite(lastLoadedUrl);
 		}
-
 		
+		menu_ScrollView.setOnScrollChangeListener(new OnScrollChangeListener(){
+
+				@Override
+				public void onScrollChange(View v, int p2, int p3, int p4, int p5)
+				{
+					RelativeLayout l1 = (RelativeLayout) findViewById(R.id.mainLinearLayout);
+					ViewGroup.LayoutParams a = (ViewGroup.LayoutParams) l1.getLayoutParams();
+					
+					if ( a.height == DensittUtil.dp2px(NORMAL_HEIGHT,MainActivity.this))
+					a.height *= (BORDER_HEIGHT/NORMAL_HEIGHT);
+					
+					l1.setLayoutParams(a);
+					
+					// I try to use objectanimator to change the scrollview's height and failue
+					//ObjectAnimator.ofFloat(p1,"scaleY",1f,3f).setDuration(1000).start();
+					//Toast.makeText(MainActivity.this,"scrollView2Big",Toast.LENGTH_SHORT).show();
+					
+				}
+				
+			
+		});
 		
 	}
+
+	
 	
 	public class kfbroOnClickListener implements OnClickListener
 	{
@@ -326,21 +312,34 @@ public class MainActivity extends Activity
 		public void onClick(View view)
 		{
 
+			//Toast.makeText(MainActivity.this,"click",Toast.LENGTH_SHORT).show();
+			RelativeLayout l1 = (RelativeLayout) findViewById(R.id.mainLinearLayout);
+			ViewGroup.LayoutParams a = (ViewGroup.LayoutParams) l1.getLayoutParams();
+			if ( a.height == DensittUtil.dp2px(BORDER_HEIGHT,MainActivity.this)){
+				a.height /= (BORDER_HEIGHT/NORMAL_HEIGHT);
+			}
+			l1.setLayoutParams(a);
+			
 			switch(view.getId()){
+				case R.id.addNewWebView_dialogButton:
+					creatNewWebViewAsCurrentWeb();
+							break;
 				case R.id.addToBookmark_dialogButton:
 					addToBM();
 					break;
 				case R.id.goBack_dialogButton:
-					if (webview.canGoBack())
-						webview.goBack();
+					if (current_webview.canGoBack())
+						current_webview.goBack();
 					break;
 				case R.id.goForward_dialogButton:
-					if(webview.canGoForward()){
-						webview.goForward();
+					if(current_webview.canGoForward()){
+						current_webview.goForward();
 					}
 					break;
 				case R.id.home_dialogButton:
-					webview.loadUrl(homeUrl);
+					current_webview.loadUrl(homeUrl);
+					break;
+				case R.id.newWebview_dialogButton:
 					break;
 				case R.id.L_Button:
 					if (isOpenAddressEdit){
@@ -373,10 +372,32 @@ public class MainActivity extends Activity
 				case R.id.cancelEditHomeurl_Button:
 					homeEdit_AlertDialog.dismiss();
 					break;
+				case R.id.delete_address_edittext_button:
+					address_EditText.setText("");
+					break;
+					
 				default:
 					closeAddressEdit();
+					
+					
+					
 					break;
 			}
+		}
+
+		private void creatNewWebViewAsCurrentWeb()
+		{
+			//Toast.makeText(MainActivity.this,"new web page",Toast.LENGTH_SHORT).show();
+			//make last webview gone
+			current_webview.setVisibility(View.GONE);
+			
+			//
+			current_webview = allWebView[webId = ++webInt];
+			
+			current_webview.setVisibility(View.VISIBLE);
+			current_webview.loadUrl(homeUrl);
+			
+			// TODO: Implement this method
 		}
 	}
 	
@@ -393,11 +414,11 @@ public class MainActivity extends Activity
 					break;
 				case R.id.home_dialogButton:
 					menu_AlertDialog.dismiss();
+					homeUrl_EditText.setText(homeUrl);
 					homeEdit_AlertDialog.show();
 					break;
 				case R.id.L_Button:
-					homeUrl_EditText.setText(homeUrl);
-					menu_AlertDialog.show();
+				//	menu_AlertDialog.show();
 					break;
 			}
 			
@@ -425,7 +446,7 @@ public class MainActivity extends Activity
 					}
 					break;
 			}
-			// TODO: Implement this method
+			
 			return false;
 		}
 	}
@@ -466,7 +487,7 @@ public class MainActivity extends Activity
 			for(String cColumn:cColumns){
 				switch(cColumn){
 					case Constant.LAST_LOADED_URL:
-						lastLoadedUrl = lastLoadedCursor.getString(lastLoadedCursor.getColumnIndex(Constant.LAST_LOADED_URL));
+						lastLoadedUrl  = lastLoadedCursor.getString(lastLoadedCursor.getColumnIndex(Constant.LAST_LOADED_URL));
 						break;
 						}
 
@@ -495,46 +516,48 @@ public class MainActivity extends Activity
 		menu_AlertDialog_Window.setAttributes(menu_AlertDialog_Window_Params);
 		}
 	
-	public void settingInitial(){
-		KfWebSettings.settings_AlertDialog_View = View.inflate(MainActivity.this,R.layout.settings_dialog,null);
-		settings_AlertDialog = new Dialog(MainActivity.this,R.style.AppTheme);
-		settings_AlertDialog.setCanceledOnTouchOutside(true);
+	public void openWebWindowsChoose(View v){
+		View wwc = View.inflate(MainActivity.this,R.layout.webviewgroup,null);
+		LinearLayout l = (LinearLayout) wwc.findViewById(R.id.webviewgroupLinearLayout);
+		Dialog wwcd = new Dialog(MainActivity.this,R.style.AppTheme);
+		wwcd.setCanceledOnTouchOutside(true);
+		Window ww = wwcd.getWindow();
+		ww.requestFeature(Window.FEATURE_NO_TITLE);
+		wwcd.setContentView(wwc);
 		
-		settings_AlertDialog_Window = settings_AlertDialog.getWindow();
-		settings_AlertDialog_Window.requestFeature(Window.FEATURE_NO_TITLE);
-		settings_AlertDialog.setContentView(KfWebSettings.settings_AlertDialog_View);
-		
-		settings_AlertDialog_Window_Params = settings_AlertDialog_Window.getAttributes();
-		settings_AlertDialog_Window.setGravity(Gravity.RIGHT);
-		settings_AlertDialog_Window_Params.width = DensittUtil.dp2px(300,MainActivity.this);
-		settings_AlertDialog_Window_Params.height = DensittUtil.dp2px(300,MainActivity.this);
-		settings_AlertDialog_Window_Params.x = DensittUtil.dp2px(30,MainActivity.this);
-		settings_AlertDialog_Window_Params.y = DensittUtil.dp2px(30,MainActivity.this);
-		settings_AlertDialog_Window.setAttributes(settings_AlertDialog_Window_Params);
-		KfWebSettings.JavaScriptEnabled_Switch = (Switch) KfWebSettings.settings_AlertDialog_View.findViewById(R.id.settingsJavaScriptEnabled_dialogSwitch);
-		KfWebSettings.JavaScriptCanOpenWindowsAutomatically_Switch = (Switch) KfWebSettings.settings_AlertDialog_View.findViewById(R.id.settingsJavaScriptCanOpenWindowsAutomatically_dialogSwitch);
-		KfWebSettings.AppCacheEnabled_Switch = (Switch) KfWebSettings.settings_AlertDialog_View.findViewById(R.id.settingsAppCacheEnabled_dialogSwitch);
-		KfWebSettings.BuildInZoomControls_Switch = (Switch) KfWebSettings.settings_AlertDialog_View.findViewById(R.id.settingsBuiltInZoomControls_dialogSwitch);
-		KfWebSettings.SavaFormData_Switch = (Switch) KfWebSettings.settings_AlertDialog_View.findViewById(R.id.settingsSaveFormData_dialogSwitch);
-		KfWebSettings.SavaPassword_Switch= (Switch) KfWebSettings.settings_AlertDialog_View.findViewById(R.id.settingsSavePassword_dialogSwitch);
-		
-		KfWebSettings.JavaScriptEnabled_Switch.setChecked(KfWebSettings.SETTINGS_JAVASCRIPTENABLED);
-		KfWebSettings.JavaScriptCanOpenWindowsAutomatically_Switch.setChecked(KfWebSettings.SETTINGS_JAVASCRIPTCANOPENWINDOWSAUTOMATICALLY);
-		KfWebSettings.AppCacheEnabled_Switch.setChecked(KfWebSettings.SETTINGS_APPCACHEENABLED);
-		KfWebSettings.BuildInZoomControls_Switch.setChecked(KfWebSettings.SETTINGS_BUILDINZOOMCONTROLS);
-		KfWebSettings.SavaFormData_Switch.setChecked(KfWebSettings.SETTINGS_SAVAFORMDATA);
-		KfWebSettings.SavaPassword_Switch.setChecked(KfWebSettings.SETTINGS_SAVAPASSWORD);
-		
-		KfWebSettings.JavaScriptEnabled_Switch.setOnCheckedChangeListener(new kfbroOnCheckListener());
-		KfWebSettings.JavaScriptCanOpenWindowsAutomatically_Switch.setOnCheckedChangeListener(new kfbroOnCheckListener());
-		KfWebSettings.AppCacheEnabled_Switch.setOnCheckedChangeListener(new kfbroOnCheckListener());
-		KfWebSettings.BuildInZoomControls_Switch.setOnCheckedChangeListener(new kfbroOnCheckListener());
-		KfWebSettings.SavaFormData_Switch.setOnCheckedChangeListener(new kfbroOnCheckListener());
-		KfWebSettings.SavaPassword_Switch.setOnCheckedChangeListener(new kfbroOnCheckListener());
-		
-		
-		
-		
+		WindowManager.LayoutParams wwp = ww.getAttributes();
+		webwindowsText = new TextView[200];
+		for (int i = 0 ; i < webInt+1 ; i++){
+			webwindowsText[i] = new TextView(this);
+			String title = allWebView[i].getTitle().toString();
+			Log.i("webtitle",title);
+			if (title != "" || !title.isEmpty())
+			webwindowsText[i].setText(" " +title);
+			webwindowsText[i].setSingleLine(true);
+			webwindowsText[i].setWidth(l.getLayoutParams().width);
+			webwindowsText[i].setTextColor(Color.parseColor("#EAC566"));
+			webwindowsText[i].setTextSize(TypedValue.COMPLEX_UNIT_SP,22);
+			webwindowsText[i].setId(50+i);
+			webwindowsText[i].setOnClickListener(new OnClickListener(){
+
+					@Override
+					public void onClick(View v)
+					{
+						current_webview.setVisibility(View.GONE);
+						current_webview = allWebView[v.getId() - 50];
+						current_webview.setVisibility(View.VISIBLE); 
+						
+						//((Dialog)(v.getParent())).dismiss();
+					}
+				});
+			//t[i].setBackgroundColor(Color.parseColor("#4a5a5a"));
+			//t[i].setTextAppearance(MainActivity.this,R.style.webWindowsText);
+			//wwcd.addContentView(t[i],null);
+			l.addView(webwindowsText[i]);
+		}
+		wwp.height = DensittUtil.dp2px((webInt + 1) * 50,MainActivity.this);
+		ww.setGravity(Gravity.CENTER_VERTICAL);
+		wwcd.show();
 	}
 
 
@@ -560,16 +583,11 @@ public class MainActivity extends Activity
         super.onCreate(savedInstanceState);
 		this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.main);
+
 		inistial();
 
     }
 
-	@Override
-	protected void onDestroy()
-	{
-		// TODO: Implement this method
-		super.onDestroy();
-	}
 
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event){
@@ -580,8 +598,8 @@ public class MainActivity extends Activity
 				doVisitWebsite(address_EditText.getText().toString());
 				break;
 			case event.KEYCODE_BACK:
-				if (webview.canGoBack()){
-					webview.goBack();
+				if (current_webview.canGoBack()){
+					current_webview.goBack();
 				}else if (isFristGoBack){
 					isFristGoBack = false;
 					address_EditText.setText("again to leave");
@@ -596,27 +614,6 @@ public class MainActivity extends Activity
 	}
 	
 	@Override
-	protected void onPause()
-	{
-		// TODO: Implement this method
-		super.onPause();
-	}
-	
-	@Override
-	protected void onRestart()
-	{
-		// TODO: Implement this method
-		super.onRestart();
-	}
-
-	@Override
-	protected void onResume()
-	{
-		// TODO: Implement this method
-		super.onResume();
-	}
-	
-	@Override
 	protected void onStop()
 	{
 		createLastLoadedUrl();
@@ -627,14 +624,12 @@ public class MainActivity extends Activity
 
 		
 	public void openAddressEdit(){
-		LinearLayout.LayoutParams openEditParams = (LinearLayout.LayoutParams) address_EditText_LinearLayout.getLayoutParams();
-		openEditParams.width = Constant.ADDRESS_EDIT_OPEN;
-		//address_EditText.setAlpha(1f);
-		address_EditText_LinearLayout.setLayoutParams(openEditParams);
+		address_EditText_LinearLayout.setVisibility(View.VISIBLE);
+		Animation loadAnimation = AnimationUtils.loadAnimation(MainActivity.this, R.anim.scale_to_big); 
+		address_EditText_LinearLayout.startAnimation(loadAnimation);
 		isOpenAddressEdit = true;
-		
 	}
-	
+
 	
 	public void saveHomeUrl(){
 		SQLiteDatabase homeUrlDatabase = openOrCreateDatabase(Constant.HOME_DATABASE_NAME,MODE_PRIVATE,null);
@@ -652,18 +647,20 @@ public class MainActivity extends Activity
 	
 	
 	public void setListener(){
-		
+		addNewWebView_Button.setOnClickListener(new kfbroOnClickListener());		
 		addToBookmark_Button.setOnClickListener(new kfbroOnClickListener());
+		
 		cancelEditHomeUrl_Button.setOnClickListener(new kfbroOnClickListener());
 		saveHomeUrl_Button.setOnClickListener(new kfbroOnClickListener());
 		l_Button.setOnClickListener(new kfbroOnClickListener());
 		goBack_Button.setOnClickListener(new kfbroOnClickListener());
 		goForward_Button.setOnClickListener(new kfbroOnClickListener());
 		home_Button.setOnClickListener(new kfbroOnClickListener());
-		settings_Button.setOnClickListener(new kfbroOnClickListener());
 		toExit_Button.setOnClickListener(new kfbroOnClickListener());
 		toBookmark_Button.setOnClickListener(new kfbroOnClickListener());
 		toHistory_Button.setOnClickListener(new kfbroOnClickListener());
+		deleteAddressEditTExt_Button.setOnClickListener(new kfbroOnClickListener());
+		
 		
 		address_EditText.setOnKeyListener(new kfbroOnKeyListener());
 		
@@ -672,13 +669,28 @@ public class MainActivity extends Activity
 		l_Button.setOnLongClickListener(new kfbroOnLongClickListener());
 		home_Button.setOnLongClickListener(new kfbroOnLongClickListener());
 		
+		Switch newWebSwitch = (Switch) findViewById(R.id.newWebSwitch);
 		
-		newWebview_button.setOnClickListener(new kfbroOnClickListener());
+		newWebSwitch.setOnClickListener(new kfbroOnClickListener());
 		
 	}
 	
 	public void webInistial(){
-		WebSettings WS = webview.getSettings();
+		LinearLayout f = (LinearLayout) findViewById(R.id.mainWebLayout);
+
+		Toast.makeText(MainActivity.this,"new web window",Toast.LENGTH_SHORT).show();
+		
+		
+		for ( int i = 0 ; i < 20 ; i++) {
+		allWebView[i] = new WebView(MainActivity.this);
+		//allWebView[i].set
+			//float hi = f.getLayoutParams().height;
+			//float wi = f.getLayoutParams().width;
+			
+		f.addView(allWebView[i],f.getLayoutParams().width,f.getLayoutParams().height);
+		allWebView[i].setVisibility(View.GONE);
+		
+		WebSettings WS = allWebView[i].getSettings();
 		
 		WS.setJavaScriptEnabled(KfWebSettings.SETTINGS_JAVASCRIPTENABLED);
 		WS.setJavaScriptCanOpenWindowsAutomatically(KfWebSettings.SETTINGS_JAVASCRIPTCANOPENWINDOWSAUTOMATICALLY);
@@ -688,19 +700,14 @@ public class MainActivity extends Activity
 		WS.setBuiltInZoomControls(KfWebSettings.SETTINGS_BUILDINZOOMCONTROLS);
 		WS.setSavePassword(KfWebSettings.SETTINGS_SAVAFORMDATA);
 		WS.setSaveFormData(KfWebSettings.SETTINGS_SAVAPASSWORD);
-		webview.setWebChromeClient(webChrome);
-		webview.setWebViewClient(webViewClient);
-		loadLastUrl();
-		loadHomeUrl();
-		if (lastLoadedUrl == Constant.LAST_LOADED_URL_NULL){
-			Log.i("info","llurl == null");
-			doVisitWebsite(homeUrl);
-		} else {
-			Log.i("info","llurl != null");
-			doVisitWebsite(lastLoadedUrl);
-			}
-		//webview.loadUrl(lastLoadedUrl);
+		allWebView[i].setWebChromeClient(webChrome);
+		allWebView[i].setWebViewClient(webViewClient);
+		}
 		
+	    current_webview = allWebView[webInt];
+		current_webview.setVisibility(View.VISIBLE);
+		
+		doVisitWebsite(homeUrl);
 	}
 	
 	public WebChromeClient webChrome = new WebChromeClient(){
@@ -708,17 +715,18 @@ public class MainActivity extends Activity
 		@Override
 		public void onProgressChanged(WebView view, int newProgress)
 		{
-			ProgressBar p= (ProgressBar)findViewById(R.id.mainProgressBar);
+			
+			
+			
+			
+			
+			ProgressBar p= (ProgressBar)findViewById(R.id.address_ProgressBar);
 			p.setProgress(newProgress);
 			if(newProgress == 100){
+				p.setVisibility(View.GONE);
 				
 				//Log.i("progress","newProgress == 100");
-			} else if (newProgress == 0){
-				//address_EditText.setText(webview.getUrl());
-				Log.i("ptogress","newProgress == 0");
-			}	
-			
-			// TODO: Implement this method
+			}		
 			super.onProgressChanged(view, newProgress);
 		}
 	};
@@ -754,11 +762,11 @@ public class MainActivity extends Activity
 		public void onPageFinished(WebView view, String url)
 		{
 			closeAddressEdit();
-				creteHistory(webview.getUrl().toString());
-	
-			web_progressbar.setVisibility(View.INVISIBLE);
+			creteHistory(current_webview.getUrl().toString());
 			l_Button.setText("L");
+			
 			super.onPageFinished(view, url);
+			
 		}
 
 		
@@ -766,9 +774,13 @@ public class MainActivity extends Activity
 		@Override
 		public void onPageStarted(WebView view, String url, Bitmap favicon)
 		{
-			web_progressbar.setVisibility(View.VISIBLE);
+			ProgressBar p= (ProgressBar)findViewById(R.id.address_ProgressBar);
+			p.setVisibility(View.VISIBLE);
 			l_Button.setText(" ");
+			address_TextView.setText("Loading");
 			super.onPageStarted(view, url, favicon);
+			
+			
 		}
 		
 		

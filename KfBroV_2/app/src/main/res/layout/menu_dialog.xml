@@ -50,7 +50,7 @@
 			android:textSize="29sp"
 			android:rotation="5"
 			android:rotationX="6"
-			android:visibility="gone"/>
+			/>
 
 		<Button
 			android:id="@+id/toHistory_dialogButton"
